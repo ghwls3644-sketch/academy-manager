@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:15
+    container_name: academy_db
+    environment:
+      POSTGRES_DB: academy_manager
+      POSTGRES_USER: academy_user
+      POSTGRES_PASSWORD: academy_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U academy_user -d academy_manager" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: academy_web
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_NAME=academy_manager
+      - DATABASE_USER=academy_user
+      - DATABASE_PASSWORD=academy_password
+      - DEBUG=True
+
+volumes:
+  postgres_data:

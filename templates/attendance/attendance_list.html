@@ -1,0 +1,141 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}출결 관리 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-calendar-check me-2"></i>출결 관리</h1>
+        <div>
+            <a href="{% url 'attendance:bulk' %}" class="btn btn-primary">
+                <i class="bi bi-people me-1"></i>일괄 입력
+            </a>
+            <a href="{% url 'attendance:create' %}" class="btn btn-outline-primary">
+                <i class="bi bi-plus-lg me-1"></i>개별 입력
+            </a>
+        </div>
+    </div>
+    
+    <!-- 필터 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">날짜</label>
+                    <input type="date" name="date" class="form-control" value="{{ date }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">반</label>
+                    <select name="class" class="form-select">
+                        <option value="">전체</option>
+                        {% for cls in classes %}
+                        <option value="{{ cls.pk }}" {% if class_id == cls.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ cls.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">상태</label>
+                    <select name="status" class="form-select">
+                        <option value="">전체</option>
+                        <option value="present" {% if status == 'present' %}selected{% endif %}>출석</option>
+                        <option value="absent" {% if status == 'absent' %}selected{% endif %}>결석</option>
+                        <option value="late" {% if status == 'late' %}selected{% endif %}>지각</option>
+                        <option value="early_leave" {% if status == 'early_leave' %}selected{% endif %}>조퇴</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i>조회
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 출결 목록 -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>날짜</th>
+                        <th>학생</th>
+                        <th>반</th>
+                        <th>상태</th>
+                        <th>메모</th>
+                        <th class="text-end">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for att in attendances %}
+                    <tr>
+                        <td>{{ att.date|date:"Y-m-d" }}</td>
+                        <td>
+                            <a href="{% url 'students:detail' att.student.pk %}">{{ att.student.name }}</a>
+                        </td>
+                        <td>{{ att.assigned_class.name|default:'-' }}</td>
+                        <td>
+                            {% if att.status == 'present' %}
+                            <span class="badge bg-success">출석</span>
+                            {% elif att.status == 'absent' %}
+                            <span class="badge bg-danger">결석</span>
+                            {% elif att.status == 'late' %}
+                            <span class="badge bg-warning">지각</span>
+                            {% else %}
+                            <span class="badge bg-info">조퇴</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ att.note|default:'-'|truncatechars:30 }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'attendance:update' att.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'attendance:delete' att.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            출결 기록이 없습니다.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 페이지네이션 -->
+    {% if attendances.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if attendances.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ attendances.previous_page_number }}&date={{ date }}&class={{ class_id }}&status={{ status }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in attendances.paginator.page_range %}
+            <li class="page-item {% if attendances.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&date={{ date }}&class={{ class_id }}&status={{ status }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if attendances.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ attendances.next_page_number }}&date={{ date }}&class={{ class_id }}&status={{ status }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

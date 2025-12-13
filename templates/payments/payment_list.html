@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load dashboard_extras %}
+
+{% block title %}수납 관리 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-credit-card me-2"></i>수납 관리</h1>
+        <div>
+            <a href="{% url 'payments:unpaid' %}" class="btn btn-outline-warning">
+                <i class="bi bi-exclamation-triangle me-1"></i>미납자
+            </a>
+            <a href="{% url 'payments:create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-1"></i>수납 등록
+            </a>
+        </div>
+    </div>
+
+    <!-- 통계 카드 -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card primary text-white">
+                <div class="card-body">
+                    <h4 class="mb-0">{{ stats.total_amount|default:0|floatformat:0 }}원</h4>
+                    <small>총 청구액</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card success text-white">
+                <div class="card-body">
+                    <h4 class="mb-0">{{ stats.total_paid|default:0|floatformat:0 }}원</h4>
+                    <small>총 납부액</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card warning text-white">
+                <div class="card-body">
+                    <h4 class="mb-0">{{ stats.total_unpaid|default:0|floatformat:0 }}원</h4>
+                    <small>미납액</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card info text-white">
+                <div class="card-body">
+                    <h4 class="mb-0">{{ stats.unpaid_count|default:0 }}건</h4>
+                    <small>미납 건수</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 필터 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label">년도</label>
+                    <select name="year" class="form-select">
+                        {% for y in years %}
+                        <option value="{{ y }}" {% if year == y|stringformat:"s" %}selected{% endif %}>{{ y }}년</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">월</label>
+                    <select name="month" class="form-select">
+                        <option value="">전체</option>
+                        {% for m in "1,2,3,4,5,6,7,8,9,10,11,12"|split:"," %}
+                        <option value="{{ m }}" {% if month == m %}selected{% endif %}>{{ m }}월</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">상태</label>
+                    <select name="status" class="form-select">
+                        <option value="">전체</option>
+                        <option value="paid" {% if status == 'paid' %}selected{% endif %}>완납</option>
+                        <option value="partial" {% if status == 'partial' %}selected{% endif %}>부분납</option>
+                        <option value="unpaid" {% if status == 'unpaid' %}selected{% endif %}>미납</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i>조회
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 수납 목록 -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>학생</th>
+                        <th>기간</th>
+                        <th class="text-end">청구액</th>
+                        <th class="text-end">납부액</th>
+                        <th>상태</th>
+                        <th>납부일</th>
+                        <th class="text-end">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'students:detail' payment.student.pk %}">
+                                {{ payment.student.name }}
+                            </a>
+                        </td>
+                        <td>{{ payment.year }}년 {{ payment.month }}월</td>
+                        <td class="text-end">{{ payment.amount }}원</td>
+                        <td class="text-end">{{ payment.paid_amount }}원</td>
+                        <td>
+                            {% if payment.status == 'paid' %}
+                            <span class="badge bg-success">완납</span>
+                            {% elif payment.status == 'partial' %}
+                            <span class="badge bg-warning">부분납</span>
+                            {% else %}
+                            <span class="badge bg-danger">미납</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ payment.payment_date|default:'-' }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'payments:update' payment.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'payments:delete' payment.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            수납 기록이 없습니다.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 페이지네이션 -->
+    {% if payments.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if payments.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{ payments.previous_page_number }}&year={{ year }}&month={{ month }}&status={{ status }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in payments.paginator.page_range %}
+            <li class="page-item {% if payments.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&year={{ year }}&month={{ month }}&status={{ status }}">{{ num
+                    }}</a>
+            </li>
+            {% endfor %}
+
+            {% if payments.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{ payments.next_page_number }}&year={{ year }}&month={{ month }}&status={{ status }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

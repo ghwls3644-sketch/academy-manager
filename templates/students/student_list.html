@@ -1,0 +1,190 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}학생 관리 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-people me-2"></i>학생 관리</h1>
+        <a href="{% url 'students:create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>새 학생 등록
+        </a>
+    </div>
+    
+    <!-- 통계 카드 -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card primary text-white">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ stats.total }}</h3>
+                        <small>전체 학생</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card success text-white">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ stats.enrolled }}</h3>
+                        <small>재원 학생</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card warning text-white">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ stats.paused }}</h3>
+                        <small>휴원 학생</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-pause-circle-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card info text-white">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ stats.withdrawn }}</h3>
+                        <small>퇴원 학생</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 검색/필터 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="이름 또는 연락처로 검색..." 
+                           value="{{ search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">전체 상태</option>
+                        <option value="enrolled" {% if status == 'enrolled' %}selected{% endif %}>재원</option>
+                        <option value="paused" {% if status == 'paused' %}selected{% endif %}>휴원</option>
+                        <option value="withdrawn" {% if status == 'withdrawn' %}selected{% endif %}>퇴원</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="assigned_class" class="form-select">
+                        <option value="">전체 반</option>
+                        {% for cls in form.assigned_class.field.queryset %}
+                        <option value="{{ cls.pk }}" {% if assigned_class == cls.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ cls.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i>검색
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 학생 목록 -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>반</th>
+                        <th>연락처</th>
+                        <th>학부모 연락처</th>
+                        <th>상태</th>
+                        <th class="text-end">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'students:detail' student.pk %}" class="text-decoration-none fw-medium">
+                                {{ student.name }}
+                            </a>
+                        </td>
+                        <td>{{ student.assigned_class.name|default:'-' }}</td>
+                        <td>{{ student.phone|default:'-' }}</td>
+                        <td>{{ student.parent_phone|default:'-' }}</td>
+                        <td>
+                            {% if student.status == 'enrolled' %}
+                            <span class="badge bg-success">재원</span>
+                            {% elif student.status == 'paused' %}
+                            <span class="badge bg-warning">휴원</span>
+                            {% else %}
+                            <span class="badge bg-secondary">퇴원</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'students:update' student.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'students:delete' student.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            등록된 학생이 없습니다.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 페이지네이션 -->
+    {% if students.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if students.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.previous_page_number }}&search={{ search }}&status={{ status }}&assigned_class={{ assigned_class }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in students.paginator.page_range %}
+            <li class="page-item {% if students.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&search={{ search }}&status={{ status }}&assigned_class={{ assigned_class }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if students.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.next_page_number }}&search={{ search }}&status={{ status }}&assigned_class={{ assigned_class }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

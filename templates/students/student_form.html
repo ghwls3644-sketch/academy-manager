@@ -1,0 +1,126 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-people me-2"></i>{{ title }}</h1>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <h5 class="mb-3 text-primary"><i class="bi bi-person me-2"></i>학생 정보</h5>
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">이름 *</label>
+                        <input type="text" name="name" class="form-control" 
+                               value="{{ form.name.value|default:'' }}" required>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">성별</label>
+                        <select name="gender" class="form-select">
+                            <option value="">선택</option>
+                            <option value="M" {% if form.gender.value == 'M' %}selected{% endif %}>남</option>
+                            <option value="F" {% if form.gender.value == 'F' %}selected{% endif %}>여</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">생년월일</label>
+                        <input type="date" name="birth_date" class="form-control" 
+                               value="{{ form.birth_date.value|default:'' }}">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">연락처</label>
+                        <input type="text" name="phone" class="form-control" 
+                               value="{{ form.phone.value|default:'' }}" placeholder="010-0000-0000">
+                    </div>
+                </div>
+                
+                <h5 class="mb-3 text-primary"><i class="bi bi-people me-2"></i>학부모 정보</h5>
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">학부모 이름</label>
+                        <input type="text" name="parent_name" class="form-control" 
+                               value="{{ form.parent_name.value|default:'' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">학부모 연락처</label>
+                        <input type="text" name="parent_phone" class="form-control" 
+                               value="{{ form.parent_phone.value|default:'' }}" placeholder="010-0000-0000">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">관계</label>
+                        <input type="text" name="parent_relation" class="form-control" 
+                               value="{{ form.parent_relation.value|default:'' }}" placeholder="예: 어머니, 아버지">
+                    </div>
+                </div>
+                
+                <h5 class="mb-3 text-primary"><i class="bi bi-building me-2"></i>학원 정보</h5>
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">반</label>
+                        <select name="assigned_class" class="form-select">
+                            <option value="">선택하세요</option>
+                            {% for cls in form.assigned_class.field.queryset %}
+                            <option value="{{ cls.pk }}" 
+                                    {% if form.assigned_class.value|stringformat:"s" == cls.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ cls.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">재원 상태</label>
+                        <select name="status" class="form-select">
+                            <option value="enrolled" {% if form.status.value == 'enrolled' or not student %}selected{% endif %}>재원</option>
+                            <option value="paused" {% if form.status.value == 'paused' %}selected{% endif %}>휴원</option>
+                            <option value="withdrawn" {% if form.status.value == 'withdrawn' %}selected{% endif %}>퇴원</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">등록일</label>
+                        <input type="date" name="enrollment_date" class="form-control" 
+                               value="{{ form.enrollment_date.value|default:'' }}">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">퇴원일</label>
+                        <input type="date" name="withdrawal_date" class="form-control" 
+                               value="{{ form.withdrawal_date.value|default:'' }}">
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">학교명</label>
+                        <input type="text" name="school_name" class="form-control" 
+                               value="{{ form.school_name.value|default:'' }}">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">학년</label>
+                        <input type="text" name="grade" class="form-control" 
+                               value="{{ form.grade.value|default:'' }}" placeholder="예: 중1, 고2">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">메모</label>
+                    <textarea name="note" class="form-control" rows="3">{{ form.note.value|default:'' }}</textarea>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-1"></i>저장
+                    </button>
+                    <a href="{% url 'students:list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-lg me-1"></i>취소
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

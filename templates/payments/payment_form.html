@@ -1,0 +1,99 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-credit-card me-2"></i>{{ title }}</h1>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">학생 *</label>
+                                <select name="student" class="form-select" required>
+                                    <option value="">선택하세요</option>
+                                    {% for student in form.student.field.queryset %}
+                                    <option value="{{ student.pk }}" 
+                                            {% if form.student.value|stringformat:"s" == student.pk|stringformat:"s" %}selected{% endif %}>
+                                        {{ student.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">년도 *</label>
+                                <input type="number" name="year" class="form-control" 
+                                       value="{{ form.year.value|default:'' }}" min="2020" max="2030" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">월 *</label>
+                                <input type="number" name="month" class="form-control" 
+                                       value="{{ form.month.value|default:'' }}" min="1" max="12" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">납부일</label>
+                                <input type="date" name="payment_date" class="form-control" 
+                                       value="{{ form.payment_date.value|default:'' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">청구 금액 *</label>
+                                <div class="input-group">
+                                    <input type="number" name="amount" class="form-control" 
+                                           value="{{ form.amount.value|default:0 }}" min="0" required>
+                                    <span class="input-group-text">원</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">납부 금액</label>
+                                <div class="input-group">
+                                    <input type="number" name="paid_amount" class="form-control" 
+                                           value="{{ form.paid_amount.value|default:0 }}" min="0">
+                                    <span class="input-group-text">원</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">결제 방식</label>
+                                <select name="payment_method" class="form-select">
+                                    <option value="">선택하세요</option>
+                                    <option value="cash" {% if form.payment_method.value == 'cash' %}selected{% endif %}>현금</option>
+                                    <option value="card" {% if form.payment_method.value == 'card' %}selected{% endif %}>카드</option>
+                                    <option value="transfer" {% if form.payment_method.value == 'transfer' %}selected{% endif %}>계좌이체</option>
+                                    <option value="other" {% if form.payment_method.value == 'other' %}selected{% endif %}>기타</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">메모</label>
+                            <textarea name="note" class="form-control" rows="2">{{ form.note.value|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>저장
+                            </button>
+                            <a href="{% url 'payments:list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg me-1"></i>취소
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}반 관리 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-building me-2"></i>반 관리</h1>
+        <a href="{% url 'classes:create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>새 반 등록
+        </a>
+    </div>
+    
+    <!-- 검색/필터 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="반 이름 또는 과목으로 검색..."
+                        value="{{ search }}">
+                </div>
+                <div class="col-md-4">
+                    <select name="status" class="form-select">
+                        <option value="">전체 상태</option>
+                        <option value="active" {% if status == 'active' %}selected{% endif %}>활성</option>
+                        <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>비활성</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i>검색
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 반 목록 -->
+    <div class="row">
+        {% for class in classes %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">
+                            <a href="{% url 'classes:detail' class.pk %}" class="text-decoration-none">
+                                {{ class.name }}
+                            </a>
+                        </h5>
+                        {% if class.is_active %}
+                        <span class="badge bg-success">활성</span>
+                        {% else %}
+                        <span class="badge bg-secondary">비활성</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if class.subject %}
+                    <p class="text-muted small mb-2">{{ class.subject }}</p>
+                    {% endif %}
+                    
+                    <ul class="list-unstyled small">
+                        <li class="mb-1">
+                            <i class="bi bi-person-badge text-primary me-2"></i>
+                            {{ class.teacher.name|default:'미지정' }}
+                        </li>
+                        <li class="mb-1">
+                            <i class="bi bi-calendar text-primary me-2"></i>
+                            {{ class.weekday_display }}
+                        </li>
+                        <li class="mb-1">
+                            <i class="bi bi-clock text-primary me-2"></i>
+                            {{ class.schedule_display }}
+                        </li>
+                        <li>
+                            <i class="bi bi-people text-primary me-2"></i>
+                            {{ class.student_count }} / {{ class.max_students }}명
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'classes:detail' class.pk %}"
+                            class="btn btn-sm btn-outline-primary flex-grow-1">
+                            <i class="bi bi-eye"></i> 상세
+                        </a>
+                        <a href="{% url 'classes:update' class.pk %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'classes:delete' class.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center text-muted py-5">
+                    <i class="bi bi-building display-4 mb-3"></i>
+                    <p class="mb-0">등록된 반이 없습니다.</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- 페이지네이션 -->
+    {% if classes.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if classes.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{ classes.previous_page_number }}&search={{ search }}&status={{ status }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in classes.paginator.page_range %}
+            <li class="page-item {% if classes.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&search={{ search }}&status={{ status }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if classes.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{ classes.next_page_number }}&search={{ search }}&status={{ status }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

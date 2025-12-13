@@ -1,0 +1,249 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}대시보드 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-speedometer2 me-2"></i>대시보드</h1>
+        <p class="text-muted">{{ today|date:"Y년 n월 j일" }} 현황</p>
+    </div>
+
+    <!-- 학생 통계 -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card primary text-white h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-0">{{ student_stats.enrolled }}</h2>
+                        <small>재원 학생</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card success text-white h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-0">{{ class_stats.total }}</h2>
+                        <small>운영 반</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-building"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card warning text-white h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-0">{{ payment_stats.unpaid_count }}</h2>
+                        <small>이번달 미납</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card stat-card info text-white h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-0">{{ attendance_stats.present }}</h2>
+                        <small>오늘 출석</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 이번달 수납 현황 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-credit-card me-2"></i>{{ current_month }}월 수납 현황</h5>
+                    <a href="{% url 'payments:list' %}" class="btn btn-sm btn-outline-primary">전체보기</a>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="border-end">
+                                <h4 class="text-primary">{{ payment_stats.total|floatformat:0 }}</h4>
+                                <small class="text-muted">청구액 (원)</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-end">
+                                <h4 class="text-success">{{ payment_stats.paid|floatformat:0 }}</h4>
+                                <small class="text-muted">납부액 (원)</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-danger">{{ payment_stats.unpaid|floatformat:0 }}</h4>
+                            <small class="text-muted">미납액 (원)</small>
+                        </div>
+                    </div>
+                    {% if payment_stats.total > 0 %}
+                    <hr>
+                    <div class="progress" style="height: 25px;">
+                        {% widthratio payment_stats.paid payment_stats.total 100 as paid_percent %}
+                        <div class="progress-bar bg-success" style="width: {{ paid_percent }}%">
+                            {{ paid_percent }}%
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 오늘 출결 현황 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>오늘 출결 현황</h5>
+                    <a href="{% url 'attendance:list' %}?date={{ today|date:'Y-m-d' }}"
+                        class="btn btn-sm btn-outline-primary">전체보기</a>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="border-end">
+                                <h4 class="text-success">{{ attendance_stats.present }}</h4>
+                                <small class="text-muted">출석</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-end">
+                                <h4 class="text-danger">{{ attendance_stats.absent }}</h4>
+                                <small class="text-muted">결석</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-warning">{{ attendance_stats.late }}</h4>
+                            <small class="text-muted">지각</small>
+                        </div>
+                    </div>
+
+                    {% if absent_today %}
+                    <hr>
+                    <h6 class="text-muted mb-2">오늘 결석 학생</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for att in absent_today %}
+                        <a href="{% url 'students:detail' att.student.pk %}"
+                            class="badge bg-danger text-decoration-none">
+                            {{ att.student.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 미납자 목록 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle text-warning me-2"></i>미납자</h5>
+                    <a href="{% url 'payments:unpaid' %}" class="btn btn-sm btn-outline-warning">전체보기</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for payment in unpaid_payments %}
+                        <a href="{% url 'payments:update' payment.pk %}"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ payment.student.name }}</strong>
+                                <small class="text-muted ms-2">{{ payment.year }}년 {{ payment.month }}월</small>
+                            </div>
+                            <span class="text-danger">{{ payment.remaining_amount }}원</span>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item text-center text-muted py-4">
+                            <i class="bi bi-check-circle display-6 text-success mb-2 d-block"></i>
+                            미납자가 없습니다
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 최근 등록 학생 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-person-plus me-2"></i>최근 등록 학생</h5>
+                    <a href="{% url 'students:list' %}" class="btn btn-sm btn-outline-primary">전체보기</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for student in recent_students %}
+                        <a href="{% url 'students:detail' student.pk %}"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ student.name }}</strong>
+                                {% if student.assigned_class %}
+                                <small class="text-muted ms-2">{{ student.assigned_class.name }}</small>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">{{ student.created_at|date:"m/d" }}</small>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item text-center text-muted py-4">
+                            등록된 학생이 없습니다
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 빠른 링크 -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>빠른 작업</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'students:create' %}" class="btn btn-outline-primary w-100 py-3">
+                        <i class="bi bi-person-plus d-block mb-1" style="font-size: 1.5rem;"></i>
+                        학생 등록
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'attendance:bulk' %}" class="btn btn-outline-success w-100 py-3">
+                        <i class="bi bi-calendar-check d-block mb-1" style="font-size: 1.5rem;"></i>
+                        출결 입력
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'payments:create' %}" class="btn btn-outline-info w-100 py-3">
+                        <i class="bi bi-credit-card d-block mb-1" style="font-size: 1.5rem;"></i>
+                        수납 등록
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'classes:create' %}" class="btn btn-outline-secondary w-100 py-3">
+                        <i class="bi bi-building d-block mb-1" style="font-size: 1.5rem;"></i>
+                        반 등록
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

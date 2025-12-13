@@ -1,0 +1,190 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ student.name }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-person me-2"></i>{{ student.name }}</h1>
+        <div>
+            <a href="{% url 'students:update' student.pk %}" class="btn btn-outline-primary">
+                <i class="bi bi-pencil me-1"></i>수정
+            </a>
+            <a href="{% url 'students:list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>목록
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <!-- 기본 정보 카드 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-person me-2"></i>학생 정보</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <small class="text-muted d-block">상태</small>
+                            {% if student.status == 'enrolled' %}
+                            <span class="badge status-enrolled">재원</span>
+                            {% elif student.status == 'paused' %}
+                            <span class="badge status-paused">휴원</span>
+                            {% else %}
+                            <span class="badge status-withdrawn">퇴원</span>
+                            {% endif %}
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">반</small>
+                            {% if student.assigned_class %}
+                            <a href="{% url 'classes:detail' student.assigned_class.pk %}">
+                                {{ student.assigned_class.name }}
+                            </a>
+                            {% else %}
+                            <span>미배정</span>
+                            {% endif %}
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">연락처</small>
+                            <span>{{ student.phone|default:'-' }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">성별</small>
+                            <span>{{ student.get_gender_display|default:'-' }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">생년월일</small>
+                            <span>{{ student.birth_date|default:'-' }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">학교 / 학년</small>
+                            <span>{{ student.school_name|default:'-' }} {{ student.grade }}</span>
+                        </li>
+                        <li>
+                            <small class="text-muted d-block">등록일</small>
+                            <span>{{ student.enrollment_date|default:'-' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 학부모 정보 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>학부모 정보</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <small class="text-muted d-block">이름</small>
+                            <span>{{ student.parent_name|default:'-' }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">연락처</small>
+                            <span>{{ student.parent_phone|default:'-' }}</span>
+                        </li>
+                        <li>
+                            <small class="text-muted d-block">관계</small>
+                            <span>{{ student.parent_relation|default:'-' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- 메모 -->
+            {% if student.note %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-sticky me-2"></i>메모</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ student.note }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- 출결 내역 -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>최근 출결</h5>
+                    <a href="{% url 'attendance:list' %}?student={{ student.pk }}"
+                        class="btn btn-sm btn-outline-primary">
+                        전체보기
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>날짜</th>
+                                    <th>상태</th>
+                                    <th>메모</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for att in attendances %}
+                                <tr>
+                                    <td>{{ att.date }}</td>
+                                    <td>
+                                        <span class="badge attendance-{{ att.status }}">{{ att.get_status_display
+                                            }}</span>
+                                    </td>
+                                    <td>{{ att.note|default:'-'|truncatechars:30 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">출결 기록이 없습니다.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 수납 내역 -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-credit-card me-2"></i>최근 수납</h5>
+                    <a href="{% url 'payments:list' %}?student={{ student.pk }}" class="btn btn-sm btn-outline-primary">
+                        전체보기
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>납부일</th>
+                                    <th>금액</th>
+                                    <th>상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in payments %}
+                                <tr>
+                                    <td>{{ payment.payment_date }}</td>
+                                    <td>{{ payment.amount|default:0 }}원</td>
+                                    <td>
+                                        <span class="badge payment-{{ payment.status }}">{{ payment.get_status_display
+                                            }}</span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">수납 기록이 없습니다.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

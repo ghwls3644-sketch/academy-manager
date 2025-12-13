@@ -1,0 +1,113 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}강사 관리 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-person-badge me-2"></i>강사 관리</h1>
+        <a href="{% url 'teachers:create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>새 강사 등록
+        </a>
+    </div>
+
+    <!-- 검색 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-10">
+                    <input type="text" name="search" class="form-control" placeholder="이름, 아이디 또는 담당 과목으로 검색..."
+                        value="{{ search }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i>검색
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 강사 목록 -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>담당 과목</th>
+                        <th>연락처</th>
+                        <th>이메일</th>
+                        <th>상태</th>
+                        <th class="text-end">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'teachers:detail' teacher.pk %}" class="text-decoration-none">
+                                {{ teacher.name }}
+                            </a>
+                        </td>
+                        <td>{{ teacher.subject|default:'-' }}</td>
+                        <td>{{ teacher.phone|default:'-' }}</td>
+                        <td>{{ teacher.email|default:'-' }}</td>
+                        <td>
+                            {% if teacher.is_active %}
+                            <span class="badge bg-success">활성</span>
+                            {% else %}
+                            <span class="badge bg-secondary">비활성</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'teachers:update' teacher.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'teachers:delete' teacher.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            등록된 강사가 없습니다.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 페이지네이션 -->
+    {% if teachers.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if teachers.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ teachers.previous_page_number }}&search={{ search }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in teachers.paginator.page_range %}
+            <li class="page-item {% if teachers.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&search={{ search }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if teachers.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ teachers.next_page_number }}&search={{ search }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

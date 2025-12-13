@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load dashboard_extras %}
+
+{% block title %}일괄 출결 입력 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-people me-2"></i>일괄 출결 입력</h1>
+    </div>
+
+    <!-- 반 및 날짜 선택 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label">반</label>
+                    <select name="assigned_class" class="form-select" required>
+                        <option value="">반을 선택하세요</option>
+                        {% for cls in form.assigned_class.field.queryset %}
+                        <option value="{{ cls.pk }}" {% if class_id==cls.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ cls.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">날짜</label>
+                    <input type="date" name="date" class="form-control" value="{{ date }}" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i>조회
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if students %}
+    <!-- 출결 입력 폼 -->
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="assigned_class" value="{{ class_id }}">
+        <input type="hidden" name="date" value="{{ date }}">
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">학생 목록 ({{ students|length }}명)</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px;">학생</th>
+                            <th style="width: 150px;">출결 상태</th>
+                            <th>메모</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        {% with existing=existing_attendances|dictget:student.pk %}
+                        <tr>
+                            <td class="fw-medium">{{ student.name }}</td>
+                            <td>
+                                <select name="status_{{ student.pk }}" class="form-select form-select-sm">
+                                    {% for value, label in status_choices %}
+                                    <option value="{{ value }}" {% if existing.status==value or value=='present' and not
+                                        existing %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="note_{{ student.pk }}" class="form-control form-control-sm"
+                                    value="{{ existing.note|default:'' }}" placeholder="메모 입력...">
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg me-1"></i>저장
+                </button>
+                <a href="{% url 'attendance:list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg me-1"></i>취소
+                </a>
+            </div>
+        </div>
+    </form>
+    {% elif class_id %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>선택한 반에 재원 중인 학생이 없습니다.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

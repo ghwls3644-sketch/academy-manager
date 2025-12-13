@@ -1,0 +1,132 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ class.name }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-building me-2"></i>{{ class.name }}</h1>
+        <div>
+            <a href="{% url 'classes:update' class.pk %}" class="btn btn-outline-primary">
+                <i class="bi bi-pencil me-1"></i>수정
+            </a>
+            <a href="{% url 'classes:list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>목록
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>반 정보</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <small class="text-muted d-block">과목</small>
+                            <span>{{ class.subject|default:'-' }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">담당 강사</small>
+                            {% if class.teacher %}
+                            <a href="{% url 'teachers:detail' class.teacher.pk %}">{{ class.teacher.name }}</a>
+                            {% else %}
+                            <span>미지정</span>
+                            {% endif %}
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">수업 요일</small>
+                            <span>{{ class.weekday_display }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">수업 시간</small>
+                            <span>{{ class.schedule_display }}</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">정원</small>
+                            <span>{{ class.student_count }} / {{ class.max_students }}명</span>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted d-block">월 수강료</small>
+                            <span>{{ class.monthly_fee|default:0 }}원</span>
+                        </li>
+                        <li>
+                            <small class="text-muted d-block">상태</small>
+                            {% if class.is_active %}
+                            <span class="badge bg-success">활성</span>
+                            {% else %}
+                            <span class="badge bg-secondary">비활성</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    {% if class.description %}
+                    <hr>
+                    <small class="text-muted d-block">설명</small>
+                    <p class="mb-0">{{ class.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>수강 학생</h5>
+                    <a href="{% url 'students:create' %}?class={{ class.pk }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-lg me-1"></i>학생 추가
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>연락처</th>
+                                    <th>상태</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'students:detail' student.pk %}" class="text-decoration-none">
+                                            {{ student.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ student.phone|default:'-' }}</td>
+                                    <td>
+                                        {% if student.status == 'enrolled' %}
+                                        <span class="badge status-enrolled">재원</span>
+                                        {% elif student.status == 'paused' %}
+                                        <span class="badge status-paused">휴원</span>
+                                        {% else %}
+                                        <span class="badge status-withdrawn">퇴원</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'students:detail' student.pk %}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        수강 학생이 없습니다.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

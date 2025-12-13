@@ -1,0 +1,32 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}출결 삭제 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>출결 삭제</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-4">
+                        <strong>{{ attendance.student.name }}</strong>의
+                        <strong>{{ attendance.date }}</strong> 출결 기록을 삭제하시겠습니까?
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>삭제
+                        </button>
+                        <a href="{% url 'attendance:list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg me-1"></i>취소
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

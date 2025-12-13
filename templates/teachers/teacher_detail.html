@@ -1,0 +1,98 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ teacher.name }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-person-badge me-2"></i>{{ teacher.name }}</h1>
+        <div>
+            <a href="{% url 'teachers:update' teacher.pk %}" class="btn btn-outline-primary">
+                <i class="bi bi-pencil me-1"></i>수정
+            </a>
+            <a href="{% url 'teachers:list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>목록
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    {% if teacher.employee.profile_image %}
+                    <img src="{{ teacher.employee.profile_image.url }}" alt="{{ teacher.name }}"
+                        class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
+                        style="width: 120px; height: 120px;">
+                        <i class="bi bi-person-fill text-white" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
+                    <h4>{{ teacher.name }}</h4>
+                    {% if teacher.subject %}
+                    <p class="text-muted">{{ teacher.subject }}</p>
+                    {% endif %}
+                    {% if teacher.is_active %}
+                    <span class="badge bg-success">활성</span>
+                    {% else %}
+                    <span class="badge bg-secondary">비활성</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>기본 정보</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">연락처</label>
+                            <p class="mb-0">{{ teacher.phone|default:'-' }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">이메일</label>
+                            <p class="mb-0">{{ teacher.email|default:'-' }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">입사일</label>
+                            <p class="mb-0">{{ teacher.employee.hire_date|default:'-' }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">등록일</label>
+                            <p class="mb-0">{{ teacher.created_at|date:"Y-m-d" }}</p>
+                        </div>
+                    </div>
+                    {% if teacher.bio %}
+                    <hr>
+                    <label class="text-muted small">소개</label>
+                    <p class="mb-0">{{ teacher.bio }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-building me-2"></i>담당 반</h5>
+                </div>
+                <div class="card-body">
+                    {% if classes %}
+                    <div class="list-group list-group-flush">
+                        {% for class in classes %}
+                        <a href="{% url 'classes:detail' class.pk %}" class="list-group-item list-group-item-action">
+                            {{ class.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">담당 반이 없습니다.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

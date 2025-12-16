@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}알림 발송 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-send me-2"></i>알림 발송</h1>
+        <a href="{% url 'messaging:logs' %}" class="btn btn-outline-primary">
+            <i class="bi bi-list-check me-1"></i>발송 로그
+        </a>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>발송 설정</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">발송 방식</label>
+                                <select name="message_type" class="form-select">
+                                    <option value="sms">SMS</option>
+                                    <option value="kakao">카카오 알림톡</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">대상 선택</label>
+                                <select name="target_type" id="targetType" class="form-select">
+                                    <option value="">-- 선택 --</option>
+                                    <option value="class">반 전체</option>
+                                    <option value="students">개별 학생</option>
+                                    <option value="unpaid">이번달 미납자</option>
+                                    <option value="all">전체 재원생</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 반 선택 -->
+                        <div id="classSelect" class="mb-3" style="display: none;">
+                            <label class="form-label">반</label>
+                            <select name="class_id" class="form-select">
+                                <option value="">-- 반 선택 --</option>
+                                {% for cls in classes %}
+                                <option value="{{ cls.pk }}">{{ cls.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- 개별 학생 선택 -->
+                        <div id="studentSelect" class="mb-3" style="display: none;">
+                            <label class="form-label">학생 선택</label>
+                            <select name="student_ids" class="form-select" multiple size="8">
+                                {% for student in students %}
+                                <option value="{{ student.pk }}">
+                                    {{ student.name }} ({{ student.assigned_class.name|default:'-' }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Ctrl/Cmd 키를 누르고 여러 명 선택 가능</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-chat-text me-2"></i>메시지 내용</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea name="content" class="form-control" rows="6" 
+                                  placeholder="발송할 메시지 내용을 입력하세요..." required></textarea>
+                        <div class="mt-2 d-flex justify-content-between">
+                            <small class="text-muted">
+                                치환 변수: {학생이름}, {반이름} (추후 지원 예정)
+                            </small>
+                            <small class="text-muted" id="charCount">0자</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-send me-2"></i>발송하기
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>안내</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li class="mb-2">SMS는 학부모 연락처로 발송됩니다.</li>
+                        <li class="mb-2">학부모 연락처가 없으면 학생 연락처로 발송됩니다.</li>
+                        <li class="mb-2">발송 결과는 '발송 로그'에서 확인할 수 있습니다.</li>
+                        <li>현재는 테스트 모드로 실제 발송되지 않습니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('targetType').addEventListener('change', function() {
+    const classSelect = document.getElementById('classSelect');
+    const studentSelect = document.getElementById('studentSelect');
+    
+    classSelect.style.display = this.value === 'class' ? 'block' : 'none';
+    studentSelect.style.display = this.value === 'students' ? 'block' : 'none';
+});
+
+document.querySelector('textarea[name="content"]').addEventListener('input', function() {
+    document.getElementById('charCount').textContent = this.value.length + '자';
+});
+</script>
+{% endblock %}

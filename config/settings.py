@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # Third party apps
     'crispy_forms',
     'crispy_bootstrap5',
+    'simple_history',
     
     # Local apps
     'accounts.apps.AccountsConfig',
@@ -43,6 +44,10 @@ INSTALLED_APPS = [
     'attendance.apps.AttendanceConfig',
     'payments.apps.PaymentsConfig',
     'dashboard.apps.DashboardConfig',
+    'core.apps.CoreConfig',
+    'exports.apps.ExportsConfig',
+    'timetable.apps.TimetableConfig',
+    'messaging.apps.MessagingConfig',
 ]
 
 MIDDLEWARE = [
@@ -157,3 +162,27 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'dashboard:index'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+
+# Celery 설정
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = True
+
+# Celery Beat 스케줄 (정기 작업)
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    # 예시: 매일 오전 9시에 미납 알림 발송
+    # 'send-unpaid-notifications': {
+    #     'task': 'payments.tasks.send_unpaid_notifications',
+    #     'schedule': crontab(hour=9, minute=0),
+    # },
+}
+
+
+# Simple History 설정
+SIMPLE_HISTORY_HISTORY_CHANGE_REASON_USE_TEXT_FIELD = True

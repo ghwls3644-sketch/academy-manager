@@ -4,3 +4,22 @@ python-dotenv>=1.0.0
 Pillow>=10.0.0
 django-crispy-forms>=2.1
 crispy-bootstrap5>=2024.2
+
+# 비동기/스케줄 (자동 알림, 백업, 집계)
+celery>=5.3.0
+redis>=5.0.0
+
+# HTTP 호출 (알림 API)
+requests>=2.31.0
+
+# QR 생성
+qrcode>=7.4.0
+
+# Excel 내보내기
+openpyxl>=3.1.0
+
+# PDF 생성
+reportlab>=4.0.0
+
+# 감사 로그 (변경 이력 추적)
+django-simple-history>=3.4.0

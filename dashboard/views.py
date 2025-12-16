@@ -82,3 +82,76 @@ def dashboard_index(request):
     }
     
     return render(request, 'dashboard/index.html', context)
+
+
+@login_required
+def dashboard_attendance_api(request):
+    """출석률 API for Chart.js"""
+    from django.http import JsonResponse
+    from calendar import monthrange
+    
+    # 최근 6개월 데이터
+    today = timezone.now().date()
+    months = []
+    rates = []
+    
+    for i in range(5, -1, -1):
+        # i개월 전
+        target_month = today.month - i
+        target_year = today.year
+        while target_month <= 0:
+            target_month += 12
+            target_year -= 1
+        
+        # 해당 월 출결 데이터
+        total = Attendance.objects.filter(
+            date__year=target_year,
+            date__month=target_month
+        ).count()
+        present = Attendance.objects.filter(
+            date__year=target_year,
+            date__month=target_month,
+            status='present'
+        ).count()
+        
+        rate = round((present / total * 100) if total > 0 else 0, 1)
+        
+        months.append(f"{target_month}월")
+        rates.append(rate)
+    
+    return JsonResponse({
+        'labels': months,
+        'data': rates,
+    })
+
+
+@login_required
+def dashboard_revenue_api(request):
+    """매출 API for Chart.js"""
+    from django.http import JsonResponse
+    
+    # 최근 6개월 데이터
+    today = timezone.now().date()
+    months = []
+    revenues = []
+    
+    for i in range(5, -1, -1):
+        target_month = today.month - i
+        target_year = today.year
+        while target_month <= 0:
+            target_month += 12
+            target_year -= 1
+        
+        # 해당 월 수납 데이터
+        total = Payment.objects.filter(
+            year=target_year,
+            month=target_month
+        ).aggregate(total=Sum('paid_amount'))['total'] or 0
+        
+        months.append(f"{target_month}월")
+        revenues.append(total)
+    
+    return JsonResponse({
+        'labels': months,
+        'data': revenues,
+    })

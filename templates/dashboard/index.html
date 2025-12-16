@@ -211,6 +211,30 @@
         </div>
     </div>
 
+    <!-- 차트 섹션 -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>월별 출석률</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="attendanceChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>월별 매출</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 빠른 링크 -->
     <div class="card">
         <div class="card-header">
@@ -242,8 +266,100 @@
                         반 등록
                     </a>
                 </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'attendance:qr_generate' %}" class="btn btn-outline-danger w-100 py-3">
+                        <i class="bi bi-qr-code d-block mb-1" style="font-size: 1.5rem;"></i>
+                        QR 출석
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'exports:hub' %}" class="btn btn-outline-success w-100 py-3">
+                        <i class="bi bi-download d-block mb-1" style="font-size: 1.5rem;"></i>
+                        내보내기
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'timetable:index' %}" class="btn btn-outline-warning w-100 py-3">
+                        <i class="bi bi-calendar3 d-block mb-1" style="font-size: 1.5rem;"></i>
+                        시간표
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'messaging:send' %}" class="btn btn-outline-info w-100 py-3">
+                        <i class="bi bi-send d-block mb-1" style="font-size: 1.5rem;"></i>
+                        알림 발송
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// 출석률 차트
+fetch('{% url "dashboard:api_attendance" %}')
+    .then(response => response.json())
+    .then(data => {
+        new Chart(document.getElementById('attendanceChart'), {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: '출석률 (%)',
+                    data: data.data,
+                    borderColor: '#4285f4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { min: 0, max: 100 }
+                }
+            }
+        });
+    });
+
+// 매출 차트
+fetch('{% url "dashboard:api_revenue" %}')
+    .then(response => response.json())
+    .then(data => {
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: '매출 (원)',
+                    data: data.data,
+                    backgroundColor: '#34a853',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString() + '원';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

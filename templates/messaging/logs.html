@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}발송 로그 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-list-check me-2"></i>발송 로그</h1>
+        <a href="{% url 'messaging:send' %}" class="btn btn-primary">
+            <i class="bi bi-send me-1"></i>새 발송
+        </a>
+    </div>
+    
+    <!-- 필터 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label">발송 방식</label>
+                    <select name="message_type" class="form-select">
+                        <option value="">전체</option>
+                        <option value="sms" {% if selected_type == 'sms' %}selected{% endif %}>SMS</option>
+                        <option value="kakao" {% if selected_type == 'kakao' %}selected{% endif %}>카카오</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">상태</label>
+                    <select name="status" class="form-select">
+                        <option value="">전체</option>
+                        <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>대기</option>
+                        <option value="sent" {% if selected_status == 'sent' %}selected{% endif %}>발송</option>
+                        <option value="failed" {% if selected_status == 'failed' %}selected{% endif %}>실패</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">시작일</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">종료일</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i>조회
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 로그 목록 -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>발송 시각</th>
+                        <th>방식</th>
+                        <th>수신자</th>
+                        <th>연락처</th>
+                        <th>내용</th>
+                        <th>상태</th>
+                        <th>발송자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in page_obj %}
+                    <tr>
+                        <td>{{ log.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if log.message_type == 'sms' %}
+                            <span class="badge bg-primary">SMS</span>
+                            {% else %}
+                            <span class="badge bg-warning">카카오</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log.recipient }}</td>
+                        <td><small class="text-muted">{{ log.recipient_phone }}</small></td>
+                        <td>{{ log.content|truncatechars:50 }}</td>
+                        <td>
+                            {% if log.status == 'sent' %}
+                            <span class="badge bg-success">발송</span>
+                            {% elif log.status == 'pending' %}
+                            <span class="badge bg-secondary">대기</span>
+                            {% elif log.status == 'failed' %}
+                            <span class="badge bg-danger" title="{{ log.error_message }}">실패</span>
+                            {% else %}
+                            <span class="badge bg-info">재시도</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log.created_by.username|default:'-' }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            발송 로그가 없습니다.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 페이지네이션 -->
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&message_type={{ selected_type }}&status={{ selected_status }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&message_type={{ selected_type }}&status={{ selected_status }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&message_type={{ selected_type }}&status={{ selected_status }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

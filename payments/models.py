@@ -62,3 +62,84 @@ class Payment(models.Model):
         else:
             self.status = 'unpaid'
         super().save(*args, **kwargs)
+
+
+class Discount(models.Model):
+    """할인/장학금 정책"""
+    TYPE_CHOICES = [
+        ('sibling', '형제 할인'),
+        ('scholarship', '장학금'),
+        ('early_bird', '조기 등록 할인'),
+        ('referral', '추천인 할인'),
+        ('other', '기타'),
+    ]
+    
+    name = models.CharField('할인명', max_length=100)
+    discount_type = models.CharField('할인 유형', max_length=20, choices=TYPE_CHOICES)
+    discount_rate = models.DecimalField('할인율 (%)', max_digits=5, decimal_places=2, null=True, blank=True)
+    discount_amount = models.PositiveIntegerField('할인 금액', null=True, blank=True)
+    description = models.TextField('설명', blank=True)
+    is_active = models.BooleanField('활성화', default=True)
+    start_date = models.DateField('시작일', null=True, blank=True)
+    end_date = models.DateField('종료일', null=True, blank=True)
+    created_at = models.DateTimeField('생성일', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = '할인 정책'
+        verbose_name_plural = '할인 정책 목록'
+    
+    def __str__(self):
+        if self.discount_rate:
+            return f"{self.name} ({self.discount_rate}%)"
+        return f"{self.name} ({self.discount_amount:,}원)"
+
+
+class StudentDiscount(models.Model):
+    """학생별 적용된 할인"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='discounts', verbose_name='학생')
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, verbose_name='할인 정책')
+    applied_date = models.DateField('적용일', auto_now_add=True)
+    note = models.CharField('비고', max_length=200, blank=True)
+    
+    class Meta:
+        verbose_name = '학생 할인'
+        verbose_name_plural = '학생 할인 목록'
+        unique_together = ['student', 'discount']
+    
+    def __str__(self):
+        return f"{self.student.name} - {self.discount.name}"
+
+
+class Refund(models.Model):
+    """환불 기록"""
+    STATUS_CHOICES = [
+        ('pending', '대기'),
+        ('approved', '승인'),
+        ('completed', '완료'),
+        ('rejected', '거절'),
+    ]
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='refunds', verbose_name='학생')
+    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='관련 수납')
+    
+    refund_amount = models.PositiveIntegerField('환불 금액')
+    reason = models.TextField('환불 사유')
+    status = models.CharField('상태', max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    requested_at = models.DateTimeField('요청일', auto_now_add=True)
+    processed_at = models.DateTimeField('처리일', null=True, blank=True)
+    processed_by = models.CharField('처리자', max_length=100, blank=True)
+    
+    bank_name = models.CharField('은행명', max_length=50, blank=True)
+    account_number = models.CharField('계좌번호', max_length=50, blank=True)
+    account_holder = models.CharField('예금주', max_length=50, blank=True)
+    
+    note = models.TextField('비고', blank=True)
+    
+    class Meta:
+        verbose_name = '환불'
+        verbose_name_plural = '환불 목록'
+        ordering = ['-requested_at']
+    
+    def __str__(self):
+        return f"{self.student.name} - {self.refund_amount:,}원 ({self.get_status_display()})"

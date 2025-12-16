@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}시간표 - Academy Manager{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+<style>
+    #calendar {
+        max-width: 100%;
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 20px;
+    }
+    .fc-theme-standard .fc-scrollgrid {
+        border-color: var(--card-border);
+    }
+    .fc-theme-standard th, .fc-theme-standard td {
+        border-color: var(--card-border);
+    }
+    .fc-daygrid-day-number, .fc-col-header-cell-cushion {
+        color: #c9d1d9;
+    }
+    .fc-event {
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .fc-toolbar-title {
+        color: #f0f6fc;
+    }
+    .fc-button-primary {
+        background: var(--primary-gradient) !important;
+        border: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1><i class="bi bi-calendar3 me-2"></i>시간표</h1>
+        <div class="d-flex gap-2">
+            <select id="classFilter" class="form-select" style="width: auto;">
+                <option value="">전체 반</option>
+                {% for cls in classes %}
+                <option value="{{ cls.pk }}">{{ cls.name }}</option>
+                {% endfor %}
+            </select>
+            <select id="teacherFilter" class="form-select" style="width: auto;">
+                <option value="">전체 강사</option>
+                {% for teacher in teachers %}
+                <option value="{{ teacher.pk }}">{{ teacher.employee.user.get_full_name|default:teacher.employee.user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div id="calendar"></div>
+</div>
+
+<!-- 이벤트 상세 모달 -->
+<div class="modal fade" id="eventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventTitle">수업 정보</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="100">시간</th>
+                        <td id="eventTime"></td>
+                    </tr>
+                    <tr>
+                        <th>강사</th>
+                        <td id="eventTeacher"></td>
+                    </tr>
+                    <tr>
+                        <th>과목</th>
+                        <td id="eventSubject"></td>
+                    </tr>
+                    <tr>
+                        <th>수강생</th>
+                        <td id="eventStudents"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const classFilter = document.getElementById('classFilter');
+    const teacherFilter = document.getElementById('teacherFilter');
+    const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        locale: 'ko',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        slotMinTime: '08:00:00',
+        slotMaxTime: '22:00:00',
+        allDaySlot: false,
+        events: function(fetchInfo, successCallback, failureCallback) {
+            const params = new URLSearchParams({
+                start: fetchInfo.startStr,
+                end: fetchInfo.endStr,
+                class_id: classFilter.value,
+                teacher_id: teacherFilter.value
+            });
+            
+            fetch(`{% url 'timetable:api' %}?${params}`)
+                .then(response => response.json())
+                .then(data => successCallback(data))
+                .catch(error => failureCallback(error));
+        },
+        eventClick: function(info) {
+            const props = info.event.extendedProps;
+            const start = info.event.start;
+            const end = info.event.end;
+            
+            document.getElementById('eventTitle').textContent = info.event.title;
+            document.getElementById('eventTime').textContent = 
+                `${start.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'})} - ${end.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'})}`;
+            document.getElementById('eventTeacher').textContent = props.teacher || '-';
+            document.getElementById('eventSubject').textContent = props.subject || '-';
+            document.getElementById('eventStudents').textContent = 
+                `${props.student_count} / ${props.max_students}명`;
+            
+            eventModal.show();
+        }
+    });
+    
+    calendar.render();
+    
+    // 필터 변경 시 새로고침
+    classFilter.addEventListener('change', () => calendar.refetchEvents());
+    teacherFilter.addEventListener('change', () => calendar.refetchEvents());
+});
+</script>
+{% endblock %}

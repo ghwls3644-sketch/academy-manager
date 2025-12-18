@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}알림 발송 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-send me-2"></i>알림 발송</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">템플릿 선택</label>
+                                    {{ form.template }}
+                                    <small class="text-muted">템플릿 선택 시 자동으로 내용이 채워집니다</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">대상 유형 <span class="text-danger">*</span></label>
+                                    {{ form.target_type }}
+                                </div>
+                                
+                                <div class="mb-3" id="targetClassDiv">
+                                    <label class="form-label">대상 반</label>
+                                    {{ form.target_class }}
+                                </div>
+                                
+                                <div class="mb-3" id="targetStudentsDiv">
+                                    <label class="form-label">대상 학생</label>
+                                    {{ form.target_students }}
+                                    <small class="text-muted">Ctrl+클릭으로 여러 학생 선택</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">예약 발송일시</label>
+                                    {{ form.scheduled_at }}
+                                    <small class="text-muted">비워두면 즉시 발송됩니다</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">제목</label>
+                                    {{ form.subject }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">내용 <span class="text-danger">*</span></label>
+                                    {{ form.content }}
+                                    <small class="text-muted">
+                                        변수: {학생명}, {반명}, {금액}, {마감일}
+                                    </small>
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    <strong>발송 안내</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <li>학생: 해당 학생의 학부모에게 발송</li>
+                                        <li>반 전체: 해당 반 모든 학생의 학부모에게 발송</li>
+                                        <li>전체: 재원 중인 모든 학생의 학부모에게 발송</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'notifications:template_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>돌아가기
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send me-1"></i>발송하기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var targetType = document.getElementById('id_target_type');
+    var targetClassDiv = document.getElementById('targetClassDiv');
+    var targetStudentsDiv = document.getElementById('targetStudentsDiv');
+    var templateSelect = document.getElementById('id_template');
+    
+    function updateTargetFields() {
+        var type = targetType.value;
+        targetClassDiv.style.display = (type === 'class') ? 'block' : 'none';
+        targetStudentsDiv.style.display = (type === 'student') ? 'block' : 'none';
+    }
+    
+    targetType.addEventListener('change', updateTargetFields);
+    updateTargetFields();
+    
+    // 템플릿 선택 시 내용 자동 채우기
+    if (templateSelect) {
+        templateSelect.addEventListener('change', function() {
+            var templateId = this.value;
+            if (templateId) {
+                fetch('{% url "notifications:template_preview" %}?template_id=' + templateId)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('id_subject').value = data.subject;
+                        document.getElementById('id_content').value = data.content;
+                    });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

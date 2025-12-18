@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% block title %}일정 관리 - Academy Manager{% endblock %}
+
+{% block extra_css %}
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet'>
+<style>
+    #calendar {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .fc-event {
+        cursor: pointer;
+    }
+    .fc-daygrid-day.fc-day-today {
+        background-color: rgba(66, 133, 244, 0.1) !important;
+    }
+    .event-tooltip {
+        position: absolute;
+        z-index: 10001;
+        background: var(--bs-dark);
+        border: 1px solid var(--bs-border-color);
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        min-width: 200px;
+    }
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 15px;
+        font-size: 0.875rem;
+    }
+    .legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        margin-right: 6px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-calendar3 me-2"></i>일정 관리</h2>
+        <div>
+            <a href="{% url 'schedule:holiday_list' %}" class="btn btn-outline-danger me-2">
+                <i class="bi bi-calendar-x me-1"></i>휴원 관리
+            </a>
+            <a href="{% url 'schedule:makeup_list' %}" class="btn btn-outline-success me-2">
+                <i class="bi bi-arrow-repeat me-1"></i>보강 관리
+            </a>
+            <a href="{% url 'schedule:event_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-1"></i>새 일정
+            </a>
+        </div>
+    </div>
+    
+    <!-- 필터 -->
+    <div class="card bg-dark mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">반 필터</label>
+                    <select id="classFilter" class="form-select">
+                        <option value="">전체</option>
+                        {% for cls in classes %}
+                        <option value="{{ cls.id }}">{{ cls.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">강사 필터</label>
+                    <select id="teacherFilter" class="form-select">
+                        <option value="">전체</option>
+                        {% for teacher in teachers %}
+                        <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #4285f4;"></span> 정규 수업
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #34a853;"></span> 보강
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #ea4335;"></span> 휴원
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #fbbc04;"></span> 특강
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #9c27b0;"></span> 캠프
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 캘린더 -->
+    <div class="card bg-dark">
+        <div class="card-body">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 이벤트 상세 모달 -->
+<div class="modal fade" id="eventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="eventModalBody">
+            </div>
+            <div class="modal-footer" id="eventModalFooter">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ko',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        buttonText: {
+            today: '오늘',
+            month: '월',
+            week: '주',
+            day: '일',
+            list: '목록'
+        },
+        events: function(info, successCallback, failureCallback) {
+            var classId = document.getElementById('classFilter').value;
+            var teacherId = document.getElementById('teacherFilter').value;
+            
+            var url = '{% url "schedule:calendar_api" %}?start=' + info.startStr + '&end=' + info.endStr;
+            if (classId) url += '&class_id=' + classId;
+            if (teacherId) url += '&teacher_id=' + teacherId;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => successCallback(data))
+                .catch(error => failureCallback(error));
+        },
+        eventClick: function(info) {
+            var event = info.event;
+            var props = event.extendedProps;
+            
+            document.getElementById('eventModalTitle').textContent = event.title;
+            
+            var bodyHtml = '<table class="table table-dark table-sm">';
+            bodyHtml += '<tr><td><strong>유형</strong></td><td>' + (props.type_display || '-') + '</td></tr>';
+            if (props.class_name) {
+                bodyHtml += '<tr><td><strong>반</strong></td><td>' + props.class_name + '</td></tr>';
+            }
+            if (props.teacher) {
+                bodyHtml += '<tr><td><strong>강사</strong></td><td>' + props.teacher + '</td></tr>';
+            }
+            if (props.subject) {
+                bodyHtml += '<tr><td><strong>과목</strong></td><td>' + props.subject + '</td></tr>';
+            }
+            if (props.student_count !== undefined) {
+                bodyHtml += '<tr><td><strong>수강생</strong></td><td>' + props.student_count + '/' + props.max_students + '명</td></tr>';
+            }
+            if (props.location) {
+                bodyHtml += '<tr><td><strong>장소</strong></td><td>' + props.location + '</td></tr>';
+            }
+            if (props.description) {
+                bodyHtml += '<tr><td><strong>설명</strong></td><td>' + props.description + '</td></tr>';
+            }
+            bodyHtml += '</table>';
+            
+            document.getElementById('eventModalBody').innerHTML = bodyHtml;
+            
+            // 버튼 (event_로 시작하는 ID만 수정/삭제 가능)
+            var footerHtml = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>';
+            if (event.id.startsWith('event_')) {
+                var eventId = event.id.replace('event_', '');
+                footerHtml = '<a href="/schedule/events/' + eventId + '/update/" class="btn btn-primary">수정</a>' +
+                             '<a href="/schedule/events/' + eventId + '/delete/" class="btn btn-danger ms-2">삭제</a>' + footerHtml;
+            }
+            document.getElementById('eventModalFooter').innerHTML = footerHtml;
+            
+            eventModal.show();
+        },
+        dateClick: function(info) {
+            // 날짜 클릭 시 새 이벤트 생성
+            window.location.href = '{% url "schedule:event_create" %}?date=' + info.dateStr;
+        },
+        eventDidMount: function(info) {
+            // 휴원 배경 이벤트 스타일
+            if (info.event.display === 'background') {
+                info.el.style.opacity = '0.3';
+            }
+        }
+    });
+    
+    calendar.render();
+    
+    // 필터 변경 시 캘린더 새로고침
+    document.getElementById('classFilter').addEventListener('change', function() {
+        calendar.refetchEvents();
+    });
+    document.getElementById('teacherFilter').addEventListener('change', function() {
+        calendar.refetchEvents();
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-journal-text me-2"></i>{{ title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label">시험명 <span class="text-danger">*</span></label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">유형</label>
+                                {{ form.exam_type }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">과목</label>
+                                {{ form.subject }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">대상 반</label>
+                                {{ form.assigned_class }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">시험일 <span class="text-danger">*</span></label>
+                                {{ form.exam_date }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">만점</label>
+                                {{ form.max_score }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">설명</label>
+                            {{ form.description }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_published }}
+                                <label class="form-check-label" for="{{ form.is_published.id_for_label }}">
+                                    학부모에게 공개
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'academics:exam_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>취소
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>저장
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -48,6 +48,10 @@ INSTALLED_APPS = [
     'exports.apps.ExportsConfig',
     'timetable.apps.TimetableConfig',
     'messaging.apps.MessagingConfig',
+    'schedule.apps.ScheduleConfig',
+    'notifications.apps.NotificationsConfig',
+    'academics.apps.AcademicsConfig',
+    'parent_portal.apps.ParentPortalConfig',
 ]
 
 MIDDLEWARE = [

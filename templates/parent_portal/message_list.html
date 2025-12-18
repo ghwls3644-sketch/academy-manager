@@ -1,0 +1,32 @@
+{% extends 'parent_portal/base.html' %}
+{% block title %}메시지{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-envelope me-2"></i>메시지</h2>
+    <a href="{% url 'parent_portal:message_create' %}" class="btn btn-primary">
+        <i class="bi bi-pencil me-1"></i>새 메시지
+    </a>
+</div>
+
+<div class="card bg-dark border-secondary">
+    <div class="card-body">
+        {% for msg in messages %}
+        <a href="{% url 'parent_portal:message_detail' msg.pk %}" class="text-decoration-none">
+            <div class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary {% if not msg.is_read and msg.direction == 'to_parent' %}bg-secondary{% endif %}">
+                <div>
+                    <span class="badge bg-{% if msg.direction == 'to_academy' %}primary{% else %}success{% endif %} me-2">
+                        {{ msg.get_direction_display }}
+                    </span>
+                    <strong class="text-light">{{ msg.subject }}</strong>
+                    <small class="text-muted ms-2">{{ msg.student.name }}</small>
+                </div>
+                <small class="text-muted">{{ msg.created_at|date:"m/d H:i" }}</small>
+            </div>
+        </a>
+        {% empty %}
+        <p class="text-muted text-center py-4">메시지가 없습니다</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

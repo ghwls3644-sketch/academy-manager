@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}일정 삭제 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card bg-dark border-danger">
+                <div class="card-header bg-danger">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>일정 삭제</h4>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">다음 일정을 삭제하시겠습니까?</p>
+                    
+                    <div class="alert alert-secondary">
+                        <strong>{{ event.title }}</strong><br>
+                        <small>
+                            {{ event.get_event_type_display }} | 
+                            {{ event.start_date }}
+                            {% if event.start_time %} {{ event.start_time }}{% endif %}
+                        </small>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'schedule:calendar' %}" class="btn btn-secondary">취소</a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-1"></i>삭제
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}{{ exam.name }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-journal-text me-2"></i>{{ exam.name }}</h2>
+            <p class="text-muted mb-0">
+                {{ exam.get_exam_type_display }} | 
+                {{ exam.exam_date }} | 
+                만점 {{ exam.max_score }}점
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'academics:score_bulk_create' exam.pk %}" class="btn btn-success me-2">
+                <i class="bi bi-table me-1"></i>일괄 입력
+            </a>
+            <a href="{% url 'academics:exam_update' exam.pk %}" class="btn btn-outline-primary">
+                <i class="bi bi-pencil me-1"></i>수정
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- 통계 -->
+        <div class="col-lg-3">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">통계</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="h4 text-primary">{{ stats.count }}</div>
+                            <small class="text-muted">응시자</small>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h4 text-success">{{ stats.average }}</div>
+                            <small class="text-muted">평균</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-info">{{ stats.max_score }}</div>
+                            <small class="text-muted">최고점</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-warning">{{ stats.min_score }}</div>
+                            <small class="text-muted">최저점</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 개별 성적 입력 -->
+            {% if unscored_students %}
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="mb-0">성적 입력</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'academics:score_create' exam.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">학생</label>
+                            <select name="student" class="form-select">
+                                {% for student in unscored_students %}
+                                <option value="{{ student.id }}">{{ student.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">점수</label>
+                            <input type="number" name="score" class="form-control" step="0.1" min="0" max="{{ exam.max_score }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">피드백</label>
+                            <textarea name="feedback" class="form-control" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg me-1"></i>입력
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- 성적 목록 -->
+        <div class="col-lg-9">
+            <div class="card bg-dark">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">성적 목록</h5>
+                    <span class="badge bg-secondary">{{ scores|length }}명</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>순위</th>
+                                    <th>학생명</th>
+                                    <th>점수</th>
+                                    <th>등급</th>
+                                    <th>피드백</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for score in scores %}
+                                <tr>
+                                    <td>
+                                        {% if forloop.counter <= 3 %}
+                                        <span class="badge bg-{% if forloop.counter == 1 %}warning text-dark{% elif forloop.counter == 2 %}secondary{% else %}danger{% endif %}">
+                                            {{ forloop.counter }}
+                                        </span>
+                                        {% else %}
+                                        {{ forloop.counter }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'academics:student_scores' score.student.pk %}">
+                                            {{ score.student.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <strong>{{ score.score }}</strong>
+                                        <small class="text-muted">/ {{ exam.max_score }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if score.grade|first == 'A' %}success{% elif score.grade|first == 'B' %}primary{% elif score.grade|first == 'C' %}warning text-dark{% elif score.grade|first == 'D' %}secondary{% else %}danger{% endif %}">
+                                            {{ score.grade }}
+                                        </span>
+                                    </td>
+                                    <td>{{ score.feedback|truncatewords:10|default:'-' }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        입력된 성적이 없습니다.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

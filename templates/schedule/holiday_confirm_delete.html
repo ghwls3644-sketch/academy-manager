@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}휴원 삭제 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card bg-dark border-danger">
+                <div class="card-header bg-danger">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>휴원 기간 삭제</h4>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">다음 휴원 기간을 삭제하시겠습니까?</p>
+                    
+                    <div class="alert alert-secondary">
+                        <strong>{{ holiday.title }}</strong><br>
+                        <small>
+                            {{ holiday.get_holiday_type_display }} | 
+                            {{ holiday.start_date }} ~ {{ holiday.end_date }} ({{ holiday.duration_days }}일)
+                        </small>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'schedule:holiday_list' %}" class="btn btn-secondary">취소</a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-1"></i>삭제
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

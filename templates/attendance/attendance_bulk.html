@@ -18,7 +18,7 @@
                     <select name="assigned_class" class="form-select" required>
                         <option value="">반을 선택하세요</option>
                         {% for cls in form.assigned_class.field.queryset %}
-                        <option value="{{ cls.pk }}" {% if class_id==cls.pk|stringformat:"s" %}selected{% endif %}>
+                        <option value="{{ cls.pk }}" {% if class_id == cls.pk|stringformat:"s" %}selected{% endif %}>
                             {{ cls.name }}
                         </option>
                         {% endfor %}
@@ -65,8 +65,7 @@
                             <td>
                                 <select name="status_{{ student.pk }}" class="form-select form-select-sm">
                                     {% for value, label in status_choices %}
-                                    <option value="{{ value }}" {% if existing.status==value or value=='present' and not
-                                        existing %}selected{% endif %}>
+                                    <option value="{{ value }}" {% if existing.status == value or value == 'present' and not existing %}selected{% endif %}>
                                         {{ label }}
                                     </option>
                                     {% endfor %}

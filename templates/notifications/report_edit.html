@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}{{ report.title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>{{ report.title }}</h2>
+            <p class="text-muted mb-0">{{ report.student.name }} | {{ report.start_date }} ~ {{ report.end_date }}</p>
+        </div>
+        <a href="{% url 'notifications:report_list' %}" class="btn btn-secondary">목록</a>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- 통계 요약 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-dark text-center p-3">
+                    <div class="h3 text-primary">{{ report.attendance_total }}</div>
+                    <small>수업일</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark text-center p-3">
+                    <div class="h3 text-success">{{ report.attendance_rate }}%</div>
+                    <small>출석률</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark text-center p-3">
+                    <div class="h3 text-info">{{ report.exam_count }}</div>
+                    <small>시험 수</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark text-center p-3">
+                    <div class="h3 text-warning">{{ report.average_score|default:'-' }}</div>
+                    <small>평균 점수</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 내용 입력 -->
+        <div class="card bg-dark mb-4">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">학습 내용</label>
+                    <textarea name="learning_summary" class="form-control" rows="3">{{ report.learning_summary }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">과제 현황</label>
+                    <textarea name="homework_status" class="form-control" rows="2">{{ report.homework_status }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">강사 코멘트</label>
+                    <textarea name="teacher_comment" class="form-control" rows="3">{{ report.teacher_comment }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">다음주 계획</label>
+                    <textarea name="next_plan" class="form-control" rows="2">{{ report.next_plan }}</textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'notifications:report_list' %}" class="btn btn-secondary">취소</a>
+            <div>
+                <button type="submit" name="action" value="save" class="btn btn-outline-primary">저장</button>
+                <button type="submit" name="action" value="ready" class="btn btn-success">발송 대기</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

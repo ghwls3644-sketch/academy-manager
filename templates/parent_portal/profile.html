@@ -1,0 +1,66 @@
+{% extends 'parent_portal/base.html' %}
+{% block title %}프로필{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-person me-2"></i>프로필 수정</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">이름</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">관계</label>
+                            {{ form.relationship }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">연락처</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">이메일</label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    <h5 class="mb-3">알림 설정</h5>
+                    
+                    <div class="form-check mb-2">
+                        {{ form.receive_attendance_alert }}
+                        <label class="form-check-label" for="{{ form.receive_attendance_alert.id_for_label }}">
+                            출결 알림 수신
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.receive_payment_alert }}
+                        <label class="form-check-label" for="{{ form.receive_payment_alert.id_for_label }}">
+                            수납 알림 수신
+                        </label>
+                    </div>
+                    <div class="form-check mb-4">
+                        {{ form.receive_score_alert }}
+                        <label class="form-check-label" for="{{ form.receive_score_alert.id_for_label }}">
+                            성적 알림 수신
+                        </label>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'parent_portal:dashboard' %}" class="btn btn-secondary">취소</a>
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

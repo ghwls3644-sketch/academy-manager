@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}{{ student.name }} 성적 - Academy Manager{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-bar-chart-line me-2"></i>{{ student.name }} 성적</h2>
+            <p class="text-muted mb-0">{{ student.assigned_class.name|default:'반 미지정' }} | {{ student.grade|default:'-' }}</p>
+        </div>
+        <a href="{% url 'academics:goal_create' %}?student={{ student.pk }}" class="btn btn-primary">
+            <i class="bi bi-bullseye me-1"></i>목표 설정
+        </a>
+    </div>
+    
+    <div class="row">
+        <!-- 차트 -->
+        <div class="col-lg-8">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">성적 추이</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="scoreChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 과목별 평균 -->
+        <div class="col-lg-4">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">과목별 평균</h5>
+                </div>
+                <div class="card-body">
+                    {% for subject, data in subject_stats.items %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>{{ subject }}</span>
+                            <strong>{{ data.average }}점</strong>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-{% if data.average >= 80 %}success{% elif data.average >= 60 %}warning{% else %}danger{% endif %}" 
+                                 style="width: {{ data.average }}%"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">성적 데이터가 없습니다.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 성적 목록 -->
+    <div class="card bg-dark">
+        <div class="card-header">
+            <h5 class="mb-0">전체 성적</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>시험명</th>
+                            <th>과목</th>
+                            <th>시험일</th>
+                            <th>점수</th>
+                            <th>등급</th>
+                            <th>피드백</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores %}
+                        <tr>
+                            <td>{{ score.exam.name }}</td>
+                            <td>{{ score.exam.subject.name|default:'-' }}</td>
+                            <td>{{ score.exam.exam_date }}</td>
+                            <td>
+                                <strong>{{ score.score }}</strong>
+                                <small class="text-muted">/ {{ score.exam.max_score }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if score.grade|first == 'A' %}success{% elif score.grade|first == 'B' %}primary{% elif score.grade|first == 'C' %}warning text-dark{% else %}danger{% endif %}">
+                                    {{ score.grade }}
+                                </span>
+                            </td>
+                            <td>{{ score.feedback|default:'-' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                성적 데이터가 없습니다.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var ctx = document.getElementById('scoreChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_data.labels|safe }},
+            datasets: [{
+                label: '점수',
+                data: {{ chart_data.scores|safe }},
+                borderColor: '#4285f4',
+                backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

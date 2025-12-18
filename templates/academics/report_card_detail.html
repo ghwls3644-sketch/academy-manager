@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}{{ report.title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-file-earmark-text me-2"></i>{{ report.title }}</h2>
+            <p class="text-muted mb-0">
+                {{ report.student.name }} | {{ report.period_start }} ~ {{ report.period_end }}
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'academics:report_card_pdf' report.pk %}" class="btn btn-danger me-2">
+                <i class="bi bi-file-pdf me-1"></i>PDF 다운로드
+            </a>
+            <a href="{% url 'academics:report_card_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i>목록
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">요약</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="h3 text-primary">{{ report.total_exams }}</div>
+                            <small class="text-muted">시험 수</small>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h3 text-success">{{ report.average_score|default:'-' }}</div>
+                            <small class="text-muted">평균 점수</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% if report.teacher_comment %}
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="mb-0">강사 코멘트</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ report.teacher_comment }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="mb-0">성적 상세</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>시험일</th>
+                                    <th>시험명</th>
+                                    <th>과목</th>
+                                    <th>점수</th>
+                                    <th>등급</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for score in scores %}
+                                <tr>
+                                    <td>{{ score.exam.exam_date }}</td>
+                                    <td>{{ score.exam.name }}</td>
+                                    <td>{{ score.exam.subject.name|default:'-' }}</td>
+                                    <td><strong>{{ score.score }}</strong> / {{ score.exam.max_score }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if score.grade|first == 'A' %}success{% elif score.grade|first == 'B' %}primary{% else %}secondary{% endif %}">
+                                            {{ score.grade }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">해당 기간 성적이 없습니다.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

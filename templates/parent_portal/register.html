@@ -1,0 +1,77 @@
+{% extends 'parent_portal/base.html' %}
+{% block title %}회원가입{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <h3><i class="bi bi-person-plus me-2"></i>학부모 회원가입</h3>
+                    <p class="text-muted">초대 코드를 입력하여 가입하세요</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">초대 코드 <span class="text-danger">*</span></label>
+                        {{ form.invite_code }}
+                        <small class="text-muted">학원에서 받은 초대 코드를 입력하세요</small>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">아이디 <span class="text-danger">*</span></label>
+                            {{ form.username }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">이름 <span class="text-danger">*</span></label>
+                            {{ form.name }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                            {{ form.password1 }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">비밀번호 확인 <span class="text-danger">*</span></label>
+                            {{ form.password2 }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">연락처 <span class="text-danger">*</span></label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">관계</label>
+                            {{ form.relationship }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">이메일</label>
+                        {{ form.email }}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="bi bi-check-lg me-1"></i>가입하기
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'parent_portal:login' %}" class="text-muted">이미 계정이 있으신가요? 로그인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

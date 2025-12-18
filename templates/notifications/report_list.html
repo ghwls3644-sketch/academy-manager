@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}주간/월간 보고서 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-file-earmark-bar-graph me-2"></i>주간/월간 보고서</h2>
+        <a href="{% url 'notifications:report_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>새 보고서
+        </a>
+    </div>
+    
+    <!-- 필터 -->
+    <div class="card bg-dark mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <select name="period" class="form-select">
+                        <option value="">기간유형 전체</option>
+                        {% for key, val in period_choices %}
+                        <option value="{{ key }}" {% if request.GET.period == key %}selected{% endif %}>{{ val }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select name="status" class="form-select">
+                        <option value="">상태 전체</option>
+                        {% for key, val in status_choices %}
+                        <option value="{{ key }}" {% if request.GET.status == key %}selected{% endif %}>{{ val }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-secondary w-100">필터 적용</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 목록 -->
+    <div class="card bg-dark">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>학생</th>
+                            <th>제목</th>
+                            <th>기간</th>
+                            <th>유형</th>
+                            <th>상태</th>
+                            <th>출석률</th>
+                            <th>작성자</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                        <tr>
+                            <td><strong>{{ report.student.name }}</strong></td>
+                            <td>{{ report.title }}</td>
+                            <td>{{ report.start_date }} ~ {{ report.end_date }}</td>
+                            <td><span class="badge bg-info">{{ report.get_period_type_display }}</span></td>
+                            <td>
+                                <span class="badge bg-{% if report.status == 'sent' %}success{% elif report.status == 'ready' %}warning{% else %}secondary{% endif %}">
+                                    {{ report.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ report.attendance_rate }}%</td>
+                            <td>{{ report.created_by.username|default:'-' }}</td>
+                            <td>
+                                <a href="{% url 'notifications:report_detail' report.pk %}" class="btn btn-sm btn-outline-light">보기</a>
+                                {% if report.status == 'draft' %}
+                                <a href="{% url 'notifications:report_edit' report.pk %}" class="btn btn-sm btn-primary">편집</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">등록된 보고서가 없습니다</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

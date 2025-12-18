@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}성적 일괄 입력 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-table me-2"></i>성적 일괄 입력</h2>
+            <p class="text-muted mb-0">{{ exam.name }} | {{ exam.exam_date }} | 만점 {{ exam.max_score }}점</p>
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="card bg-dark">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px">#</th>
+                                <th>학생명</th>
+                                <th>반</th>
+                                <th style="width: 150px">점수 (만점 {{ exam.max_score }})</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><strong>{{ student.name }}</strong></td>
+                                <td>{{ student.assigned_class.name|default:'-' }}</td>
+                                <td>
+                                    <input type="number" 
+                                           name="score_{{ student.id }}" 
+                                           class="form-control form-control-sm" 
+                                           step="0.1" 
+                                           min="0" 
+                                           max="{{ exam.max_score }}"
+                                           value="{{ existing_scores|get_item:student.id|default:'' }}">
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    대상 학생이 없습니다.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a href="{% url 'academics:exam_detail' exam.pk %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>취소
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-lg me-1"></i>저장
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

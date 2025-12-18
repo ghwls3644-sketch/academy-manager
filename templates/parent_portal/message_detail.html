@@ -1,0 +1,25 @@
+{% extends 'parent_portal/base.html' %}
+{% block title %}{{ message.subject }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'parent_portal:message_list' %}" class="text-muted"><i class="bi bi-arrow-left me-1"></i>목록</a>
+</div>
+
+<div class="card bg-dark border-secondary">
+    <div class="card-header d-flex justify-content-between">
+        <h4 class="mb-0">{{ message.subject }}</h4>
+        <span class="badge bg-{% if message.direction == 'to_academy' %}primary{% else %}success{% endif %}">
+            {{ message.get_direction_display }}
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="mb-3 text-muted">
+            <small>{{ message.student.name }} | {{ message.created_at|date:"Y-m-d H:i" }}</small>
+        </div>
+        <div class="p-3 bg-secondary rounded">
+            {{ message.content|linebreaks }}
+        </div>
+    </div>
+</div>
+{% endblock %}

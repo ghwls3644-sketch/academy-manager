@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}발송 내역 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-list-check me-2"></i>발송 내역</h2>
+        <div>
+            <a href="{% url 'notifications:send' %}" class="btn btn-success">
+                <i class="bi bi-send me-1"></i>알림 발송
+            </a>
+        </div>
+    </div>
+    
+    <!-- 필터 -->
+    <div class="card bg-dark mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">상태</label>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">전체</option>
+                        {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card bg-dark">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>템플릿</th>
+                            <th>대상</th>
+                            <th>상태</th>
+                            <th>전체/성공/실패</th>
+                            <th>생성일</th>
+                            <th>처리일</th>
+                            <th>상세</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td>{{ job.id }}</td>
+                            <td>{{ job.template.name|default:'-' }}</td>
+                            <td>{{ job.get_target_type_display }}</td>
+                            <td>
+                                <span class="badge bg-{% if job.status == 'sent' %}success{% elif job.status == 'failed' %}danger{% elif job.status == 'processing' %}warning{% else %}secondary{% endif %}">
+                                    {{ job.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ job.total_count }} / 
+                                <span class="text-success">{{ job.success_count }}</span> / 
+                                <span class="text-danger">{{ job.fail_count }}</span>
+                            </td>
+                            <td>{{ job.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ job.processed_at|date:"Y-m-d H:i"|default:'-' }}</td>
+                            <td>
+                                <a href="{% url 'notifications:job_detail' job.pk %}" class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                발송 내역이 없습니다.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

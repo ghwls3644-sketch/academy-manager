@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}{{ report.title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>{{ report.title }}</h2>
+            <p class="text-muted mb-0">{{ report.student.name }} | {{ report.start_date }} ~ {{ report.end_date }}</p>
+        </div>
+        <a href="{% url 'notifications:report_list' %}" class="btn btn-secondary">목록</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">출결 통계</div>
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="h4">{{ report.attendance_present }}</div>
+                            <small class="text-success">출석</small>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h4">{{ report.attendance_absent }}</div>
+                            <small class="text-danger">결석</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4">{{ report.attendance_late }}</div>
+                            <small class="text-warning">지각</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4">{{ report.attendance_rate }}%</div>
+                            <small class="text-info">출석률</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card bg-dark">
+                <div class="card-header">성적 통계</div>
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="h4">{{ report.exam_count }}</div>
+                            <small>시험 수</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4">{{ report.average_score|default:'-' }}</div>
+                            <small>평균 점수</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">보고서 내용</div>
+                <div class="card-body">
+                    {% if report.learning_summary %}
+                    <h6><i class="bi bi-book me-1"></i>학습 내용</h6>
+                    <p>{{ report.learning_summary }}</p>
+                    {% endif %}
+                    
+                    {% if report.homework_status %}
+                    <h6 class="mt-3"><i class="bi bi-pencil me-1"></i>과제 현황</h6>
+                    <p>{{ report.homework_status }}</p>
+                    {% endif %}
+                    
+                    {% if report.teacher_comment %}
+                    <h6 class="mt-3"><i class="bi bi-chat-dots me-1"></i>강사 코멘트</h6>
+                    <p>{{ report.teacher_comment }}</p>
+                    {% endif %}
+                    
+                    {% if report.next_plan %}
+                    <h6 class="mt-3"><i class="bi bi-arrow-right me-1"></i>다음주 계획</h6>
+                    <p>{{ report.next_plan }}</p>
+                    {% endif %}
+                    
+                    {% if not report.learning_summary and not report.teacher_comment %}
+                    <p class="text-muted text-center">작성된 내용이 없습니다</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

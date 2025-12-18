@@ -1,0 +1,105 @@
+{% extends 'parent_portal/base.html' %}
+{% block title %}대시보드{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-house me-2"></i>안녕하세요, {{ parent.name }}님</h2>
+    {% if unread_messages > 0 %}
+    <a href="{% url 'parent_portal:message_list' %}" class="btn btn-warning">
+        <i class="bi bi-envelope me-1"></i>새 메시지 {{ unread_messages }}건
+    </a>
+    {% endif %}
+</div>
+
+{% for info in children_info %}
+<div class="card bg-dark border-secondary mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">
+            <i class="bi bi-person-circle me-2"></i>{{ info.student.name }}
+            <small class="text-muted">{{ info.student.assigned_class.name|default:'-' }}</small>
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- 출결 -->
+            <div class="col-md-4 mb-3">
+                <div class="card bg-secondary h-100">
+                    <div class="card-header d-flex justify-content-between">
+                        <span><i class="bi bi-calendar-check me-1"></i>최근 출결</span>
+                        <a href="{% url 'parent_portal:child_attendance' info.student.pk %}" class="text-light">더보기</a>
+                    </div>
+                    <div class="card-body">
+                        {% for att in info.attendance %}
+                        <div class="d-flex justify-content-between border-bottom border-dark py-1">
+                            <span>{{ att.date|date:"m/d" }}</span>
+                            <span class="badge bg-{% if att.status == 'present' %}success{% elif att.status == 'absent' %}danger{% else %}warning{% endif %}">
+                                {{ att.get_status_display }}
+                            </span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center mb-0">출결 기록이 없습니다</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 수납 -->
+            <div class="col-md-4 mb-3">
+                <div class="card bg-secondary h-100">
+                    <div class="card-header d-flex justify-content-between">
+                        <span><i class="bi bi-credit-card me-1"></i>이번달 수납</span>
+                        <a href="{% url 'parent_portal:child_payments' info.student.pk %}" class="text-light">더보기</a>
+                    </div>
+                    <div class="card-body">
+                        {% if info.payment %}
+                        <div class="text-center">
+                            <div class="h3 mb-2">
+                                {% if info.payment.status == 'paid' %}
+                                <span class="text-success"><i class="bi bi-check-circle"></i> 완납</span>
+                                {% elif info.payment.status == 'unpaid' %}
+                                <span class="text-danger"><i class="bi bi-x-circle"></i> 미납</span>
+                                {% else %}
+                                <span class="text-warning"><i class="bi bi-exclamation-circle"></i> 부분납</span>
+                                {% endif %}
+                            </div>
+                            <p class="mb-1">청구: {{ info.payment.amount|default:0 }}원</p>
+                            <p class="mb-0">납부: {{ info.payment.paid_amount|default:0 }}원</p>
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center mb-0">수납 정보가 없습니다</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 성적 -->
+            <div class="col-md-4 mb-3">
+                <div class="card bg-secondary h-100">
+                    <div class="card-header d-flex justify-content-between">
+                        <span><i class="bi bi-graph-up me-1"></i>최근 성적</span>
+                        <a href="{% url 'parent_portal:child_scores' info.student.pk %}" class="text-light">더보기</a>
+                    </div>
+                    <div class="card-body">
+                        {% for score in info.scores %}
+                        <div class="d-flex justify-content-between border-bottom border-dark py-1">
+                            <span>{{ score.exam.name|truncatewords:3 }}</span>
+                            <span>
+                                <strong>{{ score.score }}</strong>점
+                                <span class="badge bg-{% if score.grade|first == 'A' %}success{% elif score.grade|first == 'B' %}primary{% else %}secondary{% endif %} ms-1">{{ score.grade }}</span>
+                            </span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center mb-0">성적 기록이 없습니다</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-info">
+    등록된 자녀가 없습니다.
+</div>
+{% endfor %}
+{% endblock %}

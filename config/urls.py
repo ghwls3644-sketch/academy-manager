@@ -19,6 +19,10 @@ urlpatterns = [
     path('exports/', include('exports.urls')),
     path('timetable/', include('timetable.urls')),
     path('messages/', include('messaging.urls')),
+    path('schedule/', include('schedule.urls')),
+    path('notifications/', include('notifications.urls')),
+    path('academics/', include('academics.urls')),
+    path('parent/', include('parent_portal.urls')),
 ]
 
 if settings.DEBUG:

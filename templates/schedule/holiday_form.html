@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-calendar-x me-2"></i>{{ title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label">제목 <span class="text-danger">*</span></label>
+                                {{ form.title }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">유형</label>
+                                {{ form.holiday_type }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">시작일 <span class="text-danger">*</span></label>
+                                {{ form.start_date }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">종료일 <span class="text-danger">*</span></label>
+                                {{ form.end_date }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">설명</label>
+                            {{ form.description }}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    {{ form.affects_all }}
+                                    <label class="form-check-label" for="{{ form.affects_all.id_for_label }}">
+                                        전체 반에 적용
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    {{ form.notify_parents }}
+                                    <label class="form-check-label" for="{{ form.notify_parents.id_for_label }}">
+                                        학부모에게 알림 발송
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3" id="classSelectDiv">
+                            <label class="form-label">적용할 반 선택</label>
+                            {{ form.affected_classes }}
+                            <small class="text-muted">Ctrl+클릭으로 여러 반 선택</small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'schedule:holiday_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>취소
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>저장
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var affectsAllCheckbox = document.getElementById('{{ form.affects_all.id_for_label }}');
+    var classSelectDiv = document.getElementById('classSelectDiv');
+    
+    function toggleClassSelect() {
+        classSelectDiv.style.display = affectsAllCheckbox.checked ? 'none' : 'block';
+    }
+    
+    affectsAllCheckbox.addEventListener('change', toggleClassSelect);
+    toggleClassSelect();
+});
+</script>
+{% endblock %}

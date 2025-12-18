@@ -68,6 +68,33 @@ def dashboard_index(request):
         status='absent'
     ).select_related('student')[:5]
     
+    # 최근 알림 발송 (notifications 앱)
+    recent_notifications = []
+    try:
+        from notifications.models import NotificationJob
+        recent_notifications = NotificationJob.objects.order_by('-created_at')[:5]
+    except:
+        pass
+    
+    # 오늘 일정 (schedule 앱)
+    today_events = []
+    try:
+        from schedule.models import CalendarEvent
+        today_events = CalendarEvent.objects.filter(
+            start_date__lte=today,
+            end_date__gte=today
+        )[:5]
+    except:
+        pass
+    
+    # 최근 시험 (academics 앱)
+    recent_exams = []
+    try:
+        from academics.models import Exam
+        recent_exams = Exam.objects.order_by('-exam_date')[:3]
+    except:
+        pass
+    
     context = {
         'student_stats': student_stats,
         'class_stats': class_stats,
@@ -76,6 +103,9 @@ def dashboard_index(request):
         'recent_students': recent_students,
         'unpaid_payments': unpaid_payments,
         'absent_today': absent_today,
+        'recent_notifications': recent_notifications,
+        'today_events': today_events,
+        'recent_exams': recent_exams,
         'current_year': current_year,
         'current_month': current_month,
         'today': today,

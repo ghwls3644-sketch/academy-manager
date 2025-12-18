@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}발송 상세 - Academy Manager{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-info-circle me-2"></i>발송 상세 #{{ job.id }}</h2>
+        <a href="{% url 'notifications:job_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>목록으로
+        </a>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">발송 정보</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-dark table-sm">
+                        <tr>
+                            <td><strong>템플릿</strong></td>
+                            <td>{{ job.template.name|default:'-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>대상 유형</strong></td>
+                            <td>{{ job.get_target_type_display }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>상태</strong></td>
+                            <td>
+                                <span class="badge bg-{% if job.status == 'sent' %}success{% elif job.status == 'failed' %}danger{% else %}secondary{% endif %}">
+                                    {{ job.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>전체</strong></td>
+                            <td>{{ job.total_count }}건</td>
+                        </tr>
+                        <tr>
+                            <td><strong>성공</strong></td>
+                            <td class="text-success">{{ job.success_count }}건</td>
+                        </tr>
+                        <tr>
+                            <td><strong>실패</strong></td>
+                            <td class="text-danger">{{ job.fail_count }}건</td>
+                        </tr>
+                        <tr>
+                            <td><strong>생성일</strong></td>
+                            <td>{{ job.created_at|date:"Y-m-d H:i:s" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>처리일</strong></td>
+                            <td>{{ job.processed_at|date:"Y-m-d H:i:s"|default:'-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>생성자</strong></td>
+                            <td>{{ job.created_by|default:'-' }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="mb-0">발송 내용</h5>
+                </div>
+                <div class="card-body">
+                    {% if job.subject %}
+                    <p><strong>제목:</strong> {{ job.subject }}</p>
+                    {% endif %}
+                    <pre class="text-light" style="white-space: pre-wrap;">{{ job.content }}</pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h5 class="mb-0">발송 로그 (최근 100건)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>수신자</th>
+                                    <th>연락처</th>
+                                    <th>결과</th>
+                                    <th>발송시각</th>
+                                    <th>오류</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                <tr>
+                                    <td>{{ log.recipient_name }}</td>
+                                    <td>{{ log.recipient_contact }}</td>
+                                    <td>
+                                        {% if log.result == 'success' %}
+                                        <span class="badge bg-success">성공</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">실패</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ log.sent_at|date:"H:i:s" }}</td>
+                                    <td>{{ log.error_message|truncatewords:10|default:'-' }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">발송 로그가 없습니다.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

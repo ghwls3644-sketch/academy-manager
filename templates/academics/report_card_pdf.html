@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ report.title }} - {{ report.student.name }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        .header .subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .student-info div {
+            flex: 1;
+        }
+        .student-info label {
+            color: #666;
+            font-size: 12px;
+        }
+        .student-info strong {
+            display: block;
+            font-size: 16px;
+        }
+        .summary-box {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+        }
+        .summary-item {
+            text-align: center;
+            padding: 15px 25px;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+        .summary-item .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        .summary-item .label {
+            font-size: 12px;
+            color: #666;
+        }
+        h2 {
+            font-size: 16px;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        .grade-A { color: #27ae60; }
+        .grade-B { color: #3498db; }
+        .grade-C { color: #f39c12; }
+        .grade-D { color: #e74c3c; }
+        .subject-stats {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .subject-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 5px;
+            min-width: 100px;
+        }
+        .subject-item .name {
+            font-size: 12px;
+            color: #666;
+        }
+        .subject-item .avg {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .teacher-comment {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .teacher-comment h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #856404;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ report.title }}</h1>
+        <div class="subtitle">{{ report.period_start }} ~ {{ report.period_end }}</div>
+    </div>
+    
+    <div class="student-info">
+        <div>
+            <label>학생명</label>
+            <strong>{{ report.student.name }}</strong>
+        </div>
+        <div>
+            <label>반</label>
+            <strong>{{ report.student.assigned_class.name|default:'-' }}</strong>
+        </div>
+        <div>
+            <label>발급일</label>
+            <strong>{{ generated_at|date:"Y.m.d" }}</strong>
+        </div>
+    </div>
+    
+    <div class="summary-box">
+        <div class="summary-item">
+            <div class="value">{{ report.total_exams }}</div>
+            <div class="label">총 시험 수</div>
+        </div>
+        <div class="summary-item">
+            <div class="value">{{ report.average_score|floatformat:1|default:'-' }}</div>
+            <div class="label">평균 점수</div>
+        </div>
+    </div>
+    
+    {% if subject_stats %}
+    <h2>과목별 평균</h2>
+    <div class="subject-stats">
+        {% for subject, stats in subject_stats.items %}
+        <div class="subject-item">
+            <div class="name">{{ subject }}</div>
+            <div class="avg">{{ stats.average }}점</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <h2>성적 상세</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 100px;">시험일</th>
+                <th>시험명</th>
+                <th style="width: 80px;">과목</th>
+                <th style="width: 100px;">점수</th>
+                <th style="width: 60px;">등급</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for score in scores %}
+            <tr>
+                <td>{{ score.exam.exam_date|date:"m.d" }}</td>
+                <td>{{ score.exam.name }}</td>
+                <td>{{ score.exam.subject.name|default:'-' }}</td>
+                <td>{{ score.score }} / {{ score.exam.max_score }}</td>
+                <td class="grade-{{ score.grade|first }}">{{ score.grade }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: #999;">성적 기록이 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if report.teacher_comment %}
+    <div class="teacher-comment">
+        <h3>강사 코멘트</h3>
+        <p>{{ report.teacher_comment }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="footer">
+        Academy Manager | 발급일시: {{ generated_at|date:"Y년 m월 d일 H시 i분" }}
+    </div>
+</body>
+</html>

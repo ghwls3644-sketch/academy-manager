@@ -30,161 +30,182 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'dashboard' %}active{% endif %}"
-                            href="{% url 'dashboard:index' %}">
-                            <i class="bi bi-speedometer2 me-1"></i>대시보드
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'students' %}active{% endif %}"
-                            href="{% url 'students:list' %}">
-                            <i class="bi bi-people me-1"></i>학생 관리
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'classes' %}active{% endif %}"
-                            href="{% url 'classes:list' %}">
-                            <i class="bi bi-building me-1"></i>반 관리
-                        </a>
-                    </li>
+                    <!-- 학원 관리 그룹 -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'attendance' %}active{% endif %}"
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'students' or request.resolver_match.app_name == 'classes' or request.resolver_match.app_name == 'teachers' %}active{% endif %}"
                             href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-calendar-check me-1"></i>출결 관리
+                            <i class="bi bi-building-fill me-1"></i>학원 관리
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark">
+                            <li class="dropdown-header text-primary"><i class="bi bi-people me-1"></i>인원 관리</li>
+                            <li><a class="dropdown-item" href="{% url 'students:list' %}">
+                                    <i class="bi bi-people me-2"></i>학생 관리
+                                </a></li>
+                            <li><a class="dropdown-item" href="{% url 'teachers:list' %}">
+                                    <i class="bi bi-person-badge me-2"></i>강사 관리
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="dropdown-header text-primary"><i class="bi bi-building me-1"></i>반 관리</li>
+                            <li><a class="dropdown-item" href="{% url 'classes:list' %}">
+                                    <i class="bi bi-collection me-2"></i>반 목록
+                                </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 운영 그룹 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'attendance' or request.resolver_match.app_name == 'payments' or request.resolver_match.app_name == 'schedule' or request.resolver_match.app_name == 'timetable' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-gear-fill me-1"></i>운영
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li class="dropdown-header text-success"><i class="bi bi-calendar-check me-1"></i>출결</li>
                             <li><a class="dropdown-item" href="{% url 'attendance:list' %}">
-                                <i class="bi bi-list-check me-2"></i>출결 현황
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="bi bi-list-check me-2"></i>출결 현황
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'attendance:qr_generate' %}">
-                                <i class="bi bi-qr-code me-2"></i>QR 코드 생성
-                            </a></li>
+                                    <i class="bi bi-qr-code me-2"></i>QR 코드 생성
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'attendance:qr_scan' %}">
-                                <i class="bi bi-qr-code-scan me-2"></i>QR 스캔
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'attendance:qr_logs' %}">
-                                <i class="bi bi-clock-history me-2"></i>QR 스캔 로그
-                            </a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'payments' %}active{% endif %}"
-                            href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-credit-card me-1"></i>수납 관리
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
+                                    <i class="bi bi-qr-code-scan me-2"></i>QR 스캔
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="dropdown-header text-warning"><i class="bi bi-credit-card me-1"></i>수납</li>
                             <li><a class="dropdown-item" href="{% url 'payments:list' %}">
-                                <i class="bi bi-list-ul me-2"></i>수납 현황
-                            </a></li>
+                                    <i class="bi bi-list-ul me-2"></i>수납 현황
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'payments:unpaid' %}">
-                                <i class="bi bi-exclamation-circle me-2"></i>미납자 목록
-                            </a></li>
+                                    <i class="bi bi-exclamation-circle me-2"></i>미납자 목록
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'payments:create' %}">
-                                <i class="bi bi-plus-circle me-2"></i>수납 등록
-                            </a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'schedule' or request.resolver_match.app_name == 'timetable' %}active{% endif %}"
-                            href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-calendar3 me-1"></i>일정 관리
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
+                                    <i class="bi bi-plus-circle me-2"></i>수납 등록
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="dropdown-header text-info"><i class="bi bi-calendar3 me-1"></i>일정</li>
                             <li><a class="dropdown-item" href="{% url 'schedule:calendar' %}">
-                                <i class="bi bi-calendar-event me-2"></i>캘린더
-                            </a></li>
+                                    <i class="bi bi-calendar-event me-2"></i>캘린더
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'timetable:index' %}">
-                                <i class="bi bi-table me-2"></i>시간표
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="bi bi-table me-2"></i>시간표
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'schedule:holiday_list' %}">
-                                <i class="bi bi-calendar-x me-2"></i>휴원 관리
-                            </a></li>
+                                    <i class="bi bi-calendar-x me-2"></i>휴원 관리
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'schedule:makeup_list' %}">
-                                <i class="bi bi-arrow-repeat me-2"></i>보강 관리
-                            </a></li>
+                                    <i class="bi bi-arrow-repeat me-2"></i>보강 관리
+                                </a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'teachers' %}active{% endif %}"
-                            href="{% url 'teachers:list' %}">
-                            <i class="bi bi-person-badge me-1"></i>강사 관리
-                        </a>
-                    </li>
+
+                    <!-- 커뮤니케이션 그룹 -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'notifications' or request.resolver_match.app_name == 'messaging' %}active{% endif %}"
                             href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-bell me-1"></i>알림
+                            <i class="bi bi-chat-square-dots-fill me-1"></i>커뮤니케이션
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark">
+                            <li class="dropdown-header text-primary"><i class="bi bi-bell me-1"></i>알림</li>
                             <li><a class="dropdown-item" href="{% url 'notifications:send' %}">
-                                <i class="bi bi-send me-2"></i>알림 발송
-                            </a></li>
+                                    <i class="bi bi-send me-2"></i>알림 발송
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'notifications:job_list' %}">
-                                <i class="bi bi-list-task me-2"></i>발송 작업
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="bi bi-list-task me-2"></i>발송 작업
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'notifications:template_list' %}">
-                                <i class="bi bi-file-text me-2"></i>템플릿 관리
-                            </a></li>
+                                    <i class="bi bi-file-text me-2"></i>템플릿 관리
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'notifications:report_list' %}">
-                                <i class="bi bi-file-earmark-bar-graph me-2"></i>보고서
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="bi bi-file-earmark-bar-graph me-2"></i>보고서
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="dropdown-header text-success"><i class="bi bi-chat-dots me-1"></i>메시지</li>
                             <li><a class="dropdown-item" href="{% url 'messaging:send' %}">
-                                <i class="bi bi-chat-dots me-2"></i>메시지 발송
-                            </a></li>
+                                    <i class="bi bi-chat-dots me-2"></i>메시지 발송
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'messaging:logs' %}">
-                                <i class="bi bi-clock-history me-2"></i>메시지 로그
-                            </a></li>
+                                    <i class="bi bi-clock-history me-2"></i>메시지 로그
+                                </a></li>
                         </ul>
                     </li>
+
+                    <!-- 분석 그룹 -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'academics' %}active{% endif %}"
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'dashboard' or request.resolver_match.app_name == 'academics' or request.resolver_match.app_name == 'exports' %}active{% endif %}"
                             href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-journal-text me-1"></i>성적
+                            <i class="bi bi-graph-up-arrow me-1"></i>분석
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark">
+                            <li class="dropdown-header text-primary"><i class="bi bi-speedometer2 me-1"></i>대시보드</li>
+                            <li><a class="dropdown-item" href="{% url 'dashboard:index' %}">
+                                    <i class="bi bi-speedometer2 me-2"></i>대시보드
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="dropdown-header text-warning"><i class="bi bi-journal-text me-1"></i>성적</li>
                             <li><a class="dropdown-item" href="{% url 'academics:exam_list' %}">
-                                <i class="bi bi-pencil-square me-2"></i>시험 관리
-                            </a></li>
+                                    <i class="bi bi-pencil-square me-2"></i>시험 관리
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'academics:subject_list' %}">
-                                <i class="bi bi-book me-2"></i>과목 관리
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="bi bi-book me-2"></i>과목 관리
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'academics:goal_list' %}">
-                                <i class="bi bi-bullseye me-2"></i>학습 목표
-                            </a></li>
+                                    <i class="bi bi-bullseye me-2"></i>학습 목표
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'academics:report_card_list' %}">
-                                <i class="bi bi-file-earmark-text me-2"></i>성적표
-                            </a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'exports' %}active{% endif %}"
-                            href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-download me-1"></i>내보내기
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
+                                    <i class="bi bi-file-earmark-text me-2"></i>성적표
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="dropdown-header text-info"><i class="bi bi-download me-1"></i>내보내기</li>
                             <li><a class="dropdown-item" href="{% url 'exports:hub' %}">
-                                <i class="bi bi-box-arrow-up-right me-2"></i>내보내기 허브
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="bi bi-box-arrow-up-right me-2"></i>내보내기 허브
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'exports:students' %}">
-                                <i class="bi bi-people me-2"></i>학생 데이터
-                            </a></li>
+                                    <i class="bi bi-people me-2"></i>학생 데이터
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'exports:attendance' %}">
-                                <i class="bi bi-calendar-check me-2"></i>출결 데이터
-                            </a></li>
+                                    <i class="bi bi-calendar-check me-2"></i>출결 데이터
+                                </a></li>
                             <li><a class="dropdown-item" href="{% url 'exports:payments' %}">
-                                <i class="bi bi-credit-card me-2"></i>수납 데이터
-                            </a></li>
+                                    <i class="bi bi-credit-card me-2"></i>수납 데이터
+                                </a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul class="navbar-nav align-items-center">
+                    <!-- Global Search -->
+                    <li class="nav-item me-3 position-relative">
+                        <div class="global-search-wrapper">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-transparent border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0 global-search-input"
+                                    id="globalSearchInput" placeholder="검색 (Ctrl+/)" autocomplete="off">
+                            </div>
+                            <div class="global-search-results" id="globalSearchResults" style="display: none;">
+                                <div class="search-loading text-center py-3" style="display: none;">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                    <span class="ms-2">검색 중...</span>
+                                </div>
+                                <div class="search-results-content"></div>
+                                <div class="search-empty text-center py-3 text-muted" style="display: none;">
+                                    <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+                                    검색 결과가 없습니다
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                     <!-- Theme Toggle -->
                     <li class="nav-item me-2">
                         <button class="theme-toggle" id="themeToggle" title="테마 전환">
@@ -249,54 +270,54 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Theme & Toast & Table Utils JS -->
     <script>
-    // ===== Theme Toggle =====
-    (function() {
-        const html = document.documentElement;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        
-        // Get saved theme or default to dark
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        html.setAttribute('data-bs-theme', savedTheme);
-        updateIcon(savedTheme);
-        
-        function updateIcon(theme) {
-            if (themeIcon) {
-                themeIcon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+        // ===== Theme Toggle =====
+        (function () {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+
+            // Get saved theme or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            html.setAttribute('data-bs-theme', savedTheme);
+            updateIcon(savedTheme);
+
+            function updateIcon(theme) {
+                if (themeIcon) {
+                    themeIcon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+                }
             }
-        }
-        
-        if (themeToggle) {
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = html.getAttribute('data-bs-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                html.setAttribute('data-bs-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                updateIcon(newTheme);
-                
-                showToast(newTheme === 'dark' ? '다크 모드로 전환했습니다' : '라이트 모드로 전환했습니다', 'info');
-            });
-        }
-    })();
-    
-    // ===== Toast Functions =====
-    function showToast(message, type = 'info', duration = 3000) {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
-        
-        const toastId = 'toast-' + Date.now();
-        const iconMap = {
-            'success': 'bi-check-circle-fill',
-            'error': 'bi-x-circle-fill',
-            'warning': 'bi-exclamation-triangle-fill',
-            'info': 'bi-info-circle-fill'
-        };
-        
-        const toastHtml = `
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function () {
+                    const currentTheme = html.getAttribute('data-bs-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                    html.setAttribute('data-bs-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateIcon(newTheme);
+
+                    showToast(newTheme === 'dark' ? '다크 모드로 전환했습니다' : '라이트 모드로 전환했습니다', 'info');
+                });
+            }
+        })();
+
+        // ===== Toast Functions =====
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toastId = 'toast-' + Date.now();
+            const iconMap = {
+                'success': 'bi-check-circle-fill',
+                'error': 'bi-x-circle-fill',
+                'warning': 'bi-exclamation-triangle-fill',
+                'info': 'bi-info-circle-fill'
+            };
+
+            const toastHtml = `
             <div id="${toastId}" class="toast toast-${type}" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-body d-flex align-items-center">
                     <i class="bi ${iconMap[type] || iconMap['info']} me-2"></i>
@@ -305,85 +326,262 @@
                 </div>
             </div>
         `;
-        
-        container.insertAdjacentHTML('beforeend', toastHtml);
-        
-        const toastElement = document.getElementById(toastId);
-        const toast = new bootstrap.Toast(toastElement, { delay: duration });
-        toast.show();
-        
-        toastElement.addEventListener('hidden.bs.toast', function() {
-            toastElement.remove();
-        });
-    }
-    
-    // ===== Loading Button =====
-    function setButtonLoading(button, loading = true) {
-        if (loading) {
-            button.classList.add('btn-loading');
-            button.disabled = true;
-            button.dataset.originalText = button.innerHTML;
-            button.innerHTML = '<span class="btn-text">' + button.innerHTML + '</span>';
-        } else {
-            button.classList.remove('btn-loading');
-            button.disabled = false;
-            if (button.dataset.originalText) {
-                button.innerHTML = button.dataset.originalText;
+
+            container.insertAdjacentHTML('beforeend', toastHtml);
+
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: duration });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', function () {
+                toastElement.remove();
+            });
+        }
+
+        // ===== Undo Toast Function =====
+        function showUndoToast(message, undoCallback, duration = 5000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toastId = 'undo-toast-' + Date.now();
+            const toastHtml = `
+            <div id="${toastId}" class="toast toast-undo" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-trash me-2"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-warning undo-btn ms-3" id="${toastId}-undo">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>실행취소
+                    </button>
+                </div>
+            </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', toastHtml);
+
+            const toastElement = document.getElementById(toastId);
+            const undoBtn = document.getElementById(toastId + '-undo');
+            const toast = new bootstrap.Toast(toastElement, { delay: duration });
+            toast.show();
+
+            let undoClicked = false;
+
+            undoBtn.addEventListener('click', function () {
+                undoClicked = true;
+                toast.hide();
+                if (typeof undoCallback === 'function') {
+                    undoCallback();
+                }
+                showToast('실행이 취소되었습니다', 'success');
+            });
+
+            toastElement.addEventListener('hidden.bs.toast', function () {
+                toastElement.remove();
+            });
+        }
+
+        // ===== Loading Button =====
+        function setButtonLoading(button, loading = true) {
+            if (loading) {
+                button.classList.add('btn-loading');
+                button.disabled = true;
+                button.dataset.originalText = button.innerHTML;
+                button.innerHTML = '<span class="btn-text">' + button.innerHTML + '</span>';
+            } else {
+                button.classList.remove('btn-loading');
+                button.disabled = false;
+                if (button.dataset.originalText) {
+                    button.innerHTML = button.dataset.originalText;
+                }
             }
         }
-    }
-    
-    // ===== Table Sorting =====
-    function initTableSorting(tableId) {
-        const table = document.getElementById(tableId);
-        if (!table) return;
-        
-        const headers = table.querySelectorAll('th.sortable');
-        
-        headers.forEach((header, index) => {
-            header.addEventListener('click', function() {
-                const tbody = table.querySelector('tbody');
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                const isAsc = header.classList.contains('asc');
-                
-                // Reset other headers
-                headers.forEach(h => h.classList.remove('asc', 'desc'));
-                
-                // Toggle sort direction
-                header.classList.add(isAsc ? 'desc' : 'asc');
-                
-                // Sort rows
-                rows.sort((a, b) => {
-                    const aVal = a.cells[index].textContent.trim();
-                    const bVal = b.cells[index].textContent.trim();
-                    
-                    // Try numeric sort first
-                    const aNum = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
-                    const bNum = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
-                    
-                    if (!isNaN(aNum) && !isNaN(bNum)) {
-                        return isAsc ? bNum - aNum : aNum - bNum;
-                    }
-                    
-                    // Fallback to string sort
-                    return isAsc ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+
+        // ===== Table Sorting =====
+        function initTableSorting(tableId) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+
+            const headers = table.querySelectorAll('th.sortable');
+
+            headers.forEach((header, index) => {
+                header.addEventListener('click', function () {
+                    const tbody = table.querySelector('tbody');
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    const isAsc = header.classList.contains('asc');
+
+                    // Reset other headers
+                    headers.forEach(h => h.classList.remove('asc', 'desc'));
+
+                    // Toggle sort direction
+                    header.classList.add(isAsc ? 'desc' : 'asc');
+
+                    // Sort rows
+                    rows.sort((a, b) => {
+                        const aVal = a.cells[index].textContent.trim();
+                        const bVal = b.cells[index].textContent.trim();
+
+                        // Try numeric sort first
+                        const aNum = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
+                        const bNum = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
+
+                        if (!isNaN(aNum) && !isNaN(bNum)) {
+                            return isAsc ? bNum - aNum : aNum - bNum;
+                        }
+
+                        // Fallback to string sort
+                        return isAsc ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+                    });
+
+                    // Re-append sorted rows
+                    rows.forEach(row => tbody.appendChild(row));
                 });
-                
-                // Re-append sorted rows
-                rows.forEach(row => tbody.appendChild(row));
+            });
+        }
+
+        // Auto-init for forms with loading
+        document.querySelectorAll('form[data-loading]').forEach(form => {
+            form.addEventListener('submit', function () {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) setButtonLoading(submitBtn, true);
             });
         });
-    }
-    
-    // Auto-init for forms with loading
-    document.querySelectorAll('form[data-loading]').forEach(form => {
-        form.addEventListener('submit', function() {
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) setButtonLoading(submitBtn, true);
-        });
-    });
+
+        // ===== Global Search =====
+        (function () {
+            const searchInput = document.getElementById('globalSearchInput');
+            const searchResults = document.getElementById('globalSearchResults');
+            if (!searchInput || !searchResults) return;
+
+            const loading = searchResults.querySelector('.search-loading');
+            const content = searchResults.querySelector('.search-results-content');
+            const empty = searchResults.querySelector('.search-empty');
+
+            let debounceTimer;
+            let currentRequest;
+
+            // Keyboard shortcut (Ctrl+/)
+            document.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+                // ESC to close
+                if (e.key === 'Escape' && searchResults.style.display !== 'none') {
+                    searchResults.style.display = 'none';
+                    searchInput.blur();
+                }
+            });
+
+            // Search on input with debounce
+            searchInput.addEventListener('input', function () {
+                const query = this.value.trim();
+
+                clearTimeout(debounceTimer);
+                if (currentRequest) currentRequest.abort();
+
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => performSearch(query), 300);
+            });
+
+            // Focus handling
+            searchInput.addEventListener('focus', function () {
+                if (content.innerHTML.trim() || this.value.length >= 2) {
+                    searchResults.style.display = 'block';
+                }
+            });
+
+            // Click outside to close
+            document.addEventListener('click', function (e) {
+                if (!searchInput.closest('.global-search-wrapper').contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+
+            function performSearch(query) {
+                loading.style.display = 'block';
+                content.innerHTML = '';
+                empty.style.display = 'none';
+                searchResults.style.display = 'block';
+
+                currentRequest = new XMLHttpRequest();
+                currentRequest.open('GET', '/core/api/search/?q=' + encodeURIComponent(query));
+                currentRequest.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        loading.style.display = 'none';
+                        if (this.status === 200) {
+                            const data = JSON.parse(this.responseText);
+                            renderResults(data);
+                        }
+                    }
+                };
+                currentRequest.send();
+            }
+
+            function renderResults(data) {
+                if (data.total === 0) {
+                    empty.style.display = 'block';
+                    content.innerHTML = '';
+                    return;
+                }
+
+                let html = '';
+
+                // Students
+                if (data.students.length > 0) {
+                    html += '<div class="search-category"><div class="search-category-header"><i class="bi bi-people me-2"></i>학생</div>';
+                    data.students.forEach(s => {
+                        html += `<a href="${s.url}" class="search-result-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-semibold">${s.name}</span>
+                                <span class="badge ${s.status_class} ms-2">${s.status}</span>
+                            </div>
+                            <small class="text-muted">${s.class_name}</small>
+                        </div>
+                        <small class="text-muted">${s.phone}</small>
+                    </a>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Classes
+                if (data.classes.length > 0) {
+                    html += '<div class="search-category"><div class="search-category-header"><i class="bi bi-collection me-2"></i>반</div>';
+                    data.classes.forEach(c => {
+                        html += `<a href="${c.url}" class="search-result-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">${c.name}</span>
+                            <small class="text-muted">${c.student_count}명</small>
+                        </div>
+                        <small class="text-muted">${c.teacher} · ${c.subject}</small>
+                    </a>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Teachers
+                if (data.teachers.length > 0) {
+                    html += '<div class="search-category"><div class="search-category-header"><i class="bi bi-person-badge me-2"></i>강사</div>';
+                    data.teachers.forEach(t => {
+                        html += `<a href="${t.url}" class="search-result-item">
+                        <div class="fw-semibold">${t.name}</div>
+                        <small class="text-muted">${t.subject} · ${t.phone}</small>
+                    </a>`;
+                    });
+                    html += '</div>';
+                }
+
+                content.innerHTML = html;
+            }
+        })();
     </script>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
 

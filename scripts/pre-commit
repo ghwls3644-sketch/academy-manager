@@ -1,0 +1,28 @@
+#!/bin/sh
+# Git Pre-commit Hook: 커밋 전 자동 데이터 백업
+
+echo "====================================="
+echo "  자동 데이터 백업 실행 중..."
+echo "====================================="
+
+# Docker 컨테이너 확인
+if ! docker ps | grep -q academy_web; then
+    echo "[경고] academy_web 컨테이너가 실행 중이 아닙니다."
+    echo "백업을 건너뜁니다. 수동으로 백업해주세요."
+    exit 0
+fi
+
+# 데이터 백업
+docker exec academy_web python manage.py dumpdata --indent 2 -o data_backup.json
+
+if [ $? -eq 0 ]; then
+    echo "[성공] 데이터 백업 완료!"
+    # 백업 파일을 커밋에 포함
+    git add data_backup.json
+    echo "data_backup.json이 커밋에 추가되었습니다."
+else
+    echo "[경고] 백업 실패. 커밋은 계속 진행됩니다."
+fi
+
+echo "====================================="
+exit 0

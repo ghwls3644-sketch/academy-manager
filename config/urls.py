@@ -23,6 +23,7 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('academics/', include('academics.urls')),
     path('parent/', include('parent_portal.urls')),
+    path('core/', include('core.urls')),
 ]
 
 if settings.DEBUG:

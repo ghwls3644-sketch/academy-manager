@@ -4,9 +4,14 @@
 
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <h1><i class="bi bi-speedometer2 me-2"></i>대시보드</h1>
-        <p class="text-muted">{{ today|date:"Y년 n월 j일" }} 현황</p>
+    <div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+            <h1><i class="bi bi-speedometer2 me-2"></i>대시보드</h1>
+            <p class="text-muted mb-0">{{ today|date:"Y년 n월 j일" }} 현황</p>
+        </div>
+        <a href="{% url 'dashboard:pdf' %}" class="btn btn-outline-primary">
+            <i class="bi bi-file-earmark-pdf me-1"></i>PDF 내보내기
+        </a>
     </div>
 
     <!-- 학생 통계 -->
@@ -249,7 +254,8 @@
                         {% for event in today_events %}
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="badge bg-{{ event.event_type }} me-2">{{ event.get_event_type_display }}</span>
+                                <span class="badge bg-{{ event.event_type }} me-2">{{ event.get_event_type_display
+                                    }}</span>
                                 <strong>{{ event.title }}</strong>
                             </div>
                             <small class="text-muted">{{ event.start_time|time:"H:i"|default:"-" }}</small>
@@ -264,7 +270,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 최근 알림 발송 -->
         <div class="col-lg-4 mb-4">
             <div class="card h-100">
@@ -275,10 +281,12 @@
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush">
                         {% for job in recent_notifications %}
-                        <a href="{% url 'notifications:job_detail' job.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between">
+                        <a href="{% url 'notifications:job_detail' job.pk %}"
+                            class="list-group-item list-group-item-action d-flex justify-content-between">
                             <div>
                                 <strong>{{ job.title|truncatewords:4 }}</strong>
-                                <span class="badge bg-{% if job.status == 'completed' %}success{% elif job.status == 'pending' %}warning{% else %}secondary{% endif %} ms-2">
+                                <span
+                                    class="badge bg-{% if job.status == 'completed' %}success{% elif job.status == 'pending' %}warning{% else %}secondary{% endif %} ms-2">
                                     {{ job.get_status_display }}
                                 </span>
                             </div>
@@ -294,7 +302,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 최근 시험 -->
         <div class="col-lg-4 mb-4">
             <div class="card h-100">
@@ -305,7 +313,8 @@
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush">
                         {% for exam in recent_exams %}
-                        <a href="{% url 'academics:exam_detail' exam.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between">
+                        <a href="{% url 'academics:exam_detail' exam.pk %}"
+                            class="list-group-item list-group-item-action d-flex justify-content-between">
                             <div>
                                 <strong>{{ exam.name|truncatewords:4 }}</strong>
                                 <small class="text-muted ms-2">{{ exam.assigned_class.name|default:"전체" }}</small>
@@ -379,67 +388,67 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// 출석률 차트
-fetch('{% url "dashboard:api_attendance" %}')
-    .then(response => response.json())
-    .then(data => {
-        new Chart(document.getElementById('attendanceChart'), {
-            type: 'line',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: '출석률 (%)',
-                    data: data.data,
-                    borderColor: '#4285f4',
-                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+    // 출석률 차트
+    fetch('{% url "dashboard:api_attendance" %}')
+        .then(response => response.json())
+        .then(data => {
+            new Chart(document.getElementById('attendanceChart'), {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '출석률 (%)',
+                        data: data.data,
+                        borderColor: '#4285f4',
+                        backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
                 },
-                scales: {
-                    y: { min: 0, max: 100 }
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { min: 0, max: 100 }
+                    }
                 }
-            }
+            });
         });
-    });
 
-// 매출 차트
-fetch('{% url "dashboard:api_revenue" %}')
-    .then(response => response.json())
-    .then(data => {
-        new Chart(document.getElementById('revenueChart'), {
-            type: 'bar',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: '매출 (원)',
-                    data: data.data,
-                    backgroundColor: '#34a853',
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+    // 매출 차트
+    fetch('{% url "dashboard:api_revenue" %}')
+        .then(response => response.json())
+        .then(data => {
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '매출 (원)',
+                        data: data.data,
+                        backgroundColor: '#34a853',
+                        borderRadius: 4
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString() + '원';
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return value.toLocaleString() + '원';
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
         });
-    });
 </script>
 {% endblock %}

@@ -40,7 +40,7 @@
   "pk": 5,
   "fields": {
     "name": "Can add permission",
-    "content_type": 3,
+    "content_type": 2,
     "codename": "add_permission"
   }
 },
@@ -49,7 +49,7 @@
   "pk": 6,
   "fields": {
     "name": "Can change permission",
-    "content_type": 3,
+    "content_type": 2,
     "codename": "change_permission"
   }
 },
@@ -58,7 +58,7 @@
   "pk": 7,
   "fields": {
     "name": "Can delete permission",
-    "content_type": 3,
+    "content_type": 2,
     "codename": "delete_permission"
   }
 },
@@ -67,7 +67,7 @@
   "pk": 8,
   "fields": {
     "name": "Can view permission",
-    "content_type": 3,
+    "content_type": 2,
     "codename": "view_permission"
   }
 },
@@ -76,7 +76,7 @@
   "pk": 9,
   "fields": {
     "name": "Can add group",
-    "content_type": 2,
+    "content_type": 3,
     "codename": "add_group"
   }
 },
@@ -85,7 +85,7 @@
   "pk": 10,
   "fields": {
     "name": "Can change group",
-    "content_type": 2,
+    "content_type": 3,
     "codename": "change_group"
   }
 },
@@ -94,7 +94,7 @@
   "pk": 11,
   "fields": {
     "name": "Can delete group",
-    "content_type": 2,
+    "content_type": 3,
     "codename": "delete_group"
   }
 },
@@ -103,7 +103,7 @@
   "pk": 12,
   "fields": {
     "name": "Can view group",
-    "content_type": 2,
+    "content_type": 3,
     "codename": "view_group"
   }
 },
@@ -219,8 +219,8 @@
   "model": "auth.permission",
   "pk": 25,
   "fields": {
-    "name": "Can add ����",
-    "content_type": 8,
+    "name": "Can add 역할",
+    "content_type": 7,
     "codename": "add_role"
   }
 },
@@ -228,8 +228,8 @@
   "model": "auth.permission",
   "pk": 26,
   "fields": {
-    "name": "Can change ����",
-    "content_type": 8,
+    "name": "Can change 역할",
+    "content_type": 7,
     "codename": "change_role"
   }
 },
@@ -237,8 +237,8 @@
   "model": "auth.permission",
   "pk": 27,
   "fields": {
-    "name": "Can delete ����",
-    "content_type": 8,
+    "name": "Can delete 역할",
+    "content_type": 7,
     "codename": "delete_role"
   }
 },
@@ -246,8 +246,8 @@
   "model": "auth.permission",
   "pk": 28,
   "fields": {
-    "name": "Can view ����",
-    "content_type": 8,
+    "name": "Can view 역할",
+    "content_type": 7,
     "codename": "view_role"
   }
 },
@@ -255,8 +255,8 @@
   "model": "auth.permission",
   "pk": 29,
   "fields": {
-    "name": "Can add ����",
-    "content_type": 7,
+    "name": "Can add 직원",
+    "content_type": 8,
     "codename": "add_employee"
   }
 },
@@ -264,8 +264,8 @@
   "model": "auth.permission",
   "pk": 30,
   "fields": {
-    "name": "Can change ����",
-    "content_type": 7,
+    "name": "Can change 직원",
+    "content_type": 8,
     "codename": "change_employee"
   }
 },
@@ -273,8 +273,8 @@
   "model": "auth.permission",
   "pk": 31,
   "fields": {
-    "name": "Can delete ����",
-    "content_type": 7,
+    "name": "Can delete 직원",
+    "content_type": 8,
     "codename": "delete_employee"
   }
 },
@@ -282,8 +282,8 @@
   "model": "auth.permission",
   "pk": 32,
   "fields": {
-    "name": "Can view ����",
-    "content_type": 7,
+    "name": "Can view 직원",
+    "content_type": 8,
     "codename": "view_employee"
   }
 },
@@ -291,7 +291,7 @@
   "model": "auth.permission",
   "pk": 33,
   "fields": {
-    "name": "Can add ����",
+    "name": "Can add 강사",
     "content_type": 9,
     "codename": "add_teacher"
   }
@@ -300,7 +300,7 @@
   "model": "auth.permission",
   "pk": 34,
   "fields": {
-    "name": "Can change ����",
+    "name": "Can change 강사",
     "content_type": 9,
     "codename": "change_teacher"
   }
@@ -309,7 +309,7 @@
   "model": "auth.permission",
   "pk": 35,
   "fields": {
-    "name": "Can delete ����",
+    "name": "Can delete 강사",
     "content_type": 9,
     "codename": "delete_teacher"
   }
@@ -318,7 +318,7 @@
   "model": "auth.permission",
   "pk": 36,
   "fields": {
-    "name": "Can view ����",
+    "name": "Can view 강사",
     "content_type": 9,
     "codename": "view_teacher"
   }
@@ -327,7 +327,7 @@
   "model": "auth.permission",
   "pk": 37,
   "fields": {
-    "name": "Can add ��",
+    "name": "Can add 반",
     "content_type": 10,
     "codename": "add_class"
   }
@@ -336,7 +336,7 @@
   "model": "auth.permission",
   "pk": 38,
   "fields": {
-    "name": "Can change ��",
+    "name": "Can change 반",
     "content_type": 10,
     "codename": "change_class"
   }
@@ -345,7 +345,7 @@
   "model": "auth.permission",
   "pk": 39,
   "fields": {
-    "name": "Can delete ��",
+    "name": "Can delete 반",
     "content_type": 10,
     "codename": "delete_class"
   }
@@ -354,7 +354,7 @@
   "model": "auth.permission",
   "pk": 40,
   "fields": {
-    "name": "Can view ��",
+    "name": "Can view 반",
     "content_type": 10,
     "codename": "view_class"
   }
@@ -363,7 +363,7 @@
   "model": "auth.permission",
   "pk": 41,
   "fields": {
-    "name": "Can add �л�",
+    "name": "Can add 학생",
     "content_type": 11,
     "codename": "add_student"
   }
@@ -372,7 +372,7 @@
   "model": "auth.permission",
   "pk": 42,
   "fields": {
-    "name": "Can change �л�",
+    "name": "Can change 학생",
     "content_type": 11,
     "codename": "change_student"
   }
@@ -381,7 +381,7 @@
   "model": "auth.permission",
   "pk": 43,
   "fields": {
-    "name": "Can delete �л�",
+    "name": "Can delete 학생",
     "content_type": 11,
     "codename": "delete_student"
   }
@@ -390,7 +390,7 @@
   "model": "auth.permission",
   "pk": 44,
   "fields": {
-    "name": "Can view �л�",
+    "name": "Can view 학생",
     "content_type": 11,
     "codename": "view_student"
   }
@@ -399,151 +399,151 @@
   "model": "auth.permission",
   "pk": 45,
   "fields": {
-    "name": "Can add ���",
+    "name": "Can add 대기자",
     "content_type": 12,
-    "codename": "add_attendance"
+    "codename": "add_waitlist"
   }
 },
 {
   "model": "auth.permission",
   "pk": 46,
   "fields": {
-    "name": "Can change ���",
+    "name": "Can change 대기자",
     "content_type": 12,
-    "codename": "change_attendance"
+    "codename": "change_waitlist"
   }
 },
 {
   "model": "auth.permission",
   "pk": 47,
   "fields": {
-    "name": "Can delete ���",
+    "name": "Can delete 대기자",
     "content_type": 12,
-    "codename": "delete_attendance"
+    "codename": "delete_waitlist"
   }
 },
 {
   "model": "auth.permission",
   "pk": 48,
   "fields": {
-    "name": "Can view ���",
+    "name": "Can view 대기자",
     "content_type": 12,
-    "codename": "view_attendance"
+    "codename": "view_waitlist"
   }
 },
 {
   "model": "auth.permission",
   "pk": 49,
   "fields": {
-    "name": "Can add ����",
+    "name": "Can add 상담 일지",
     "content_type": 13,
-    "codename": "add_payment"
+    "codename": "add_consultlog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 50,
   "fields": {
-    "name": "Can change ����",
+    "name": "Can change 상담 일지",
     "content_type": 13,
-    "codename": "change_payment"
+    "codename": "change_consultlog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 51,
   "fields": {
-    "name": "Can delete ����",
+    "name": "Can delete 상담 일지",
     "content_type": 13,
-    "codename": "delete_payment"
+    "codename": "delete_consultlog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 52,
   "fields": {
-    "name": "Can view ����",
+    "name": "Can view 상담 일지",
     "content_type": 13,
-    "codename": "view_payment"
+    "codename": "view_consultlog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 53,
   "fields": {
-    "name": "Can add ��� ����",
+    "name": "Can add 출결",
     "content_type": 14,
-    "codename": "add_consultlog"
+    "codename": "add_attendance"
   }
 },
 {
   "model": "auth.permission",
   "pk": 54,
   "fields": {
-    "name": "Can change ��� ����",
+    "name": "Can change 출결",
     "content_type": 14,
-    "codename": "change_consultlog"
+    "codename": "change_attendance"
   }
 },
 {
   "model": "auth.permission",
   "pk": 55,
   "fields": {
-    "name": "Can delete ��� ����",
+    "name": "Can delete 출결",
     "content_type": 14,
-    "codename": "delete_consultlog"
+    "codename": "delete_attendance"
   }
 },
 {
   "model": "auth.permission",
   "pk": 56,
   "fields": {
-    "name": "Can view ��� ����",
+    "name": "Can view 출결",
     "content_type": 14,
-    "codename": "view_consultlog"
+    "codename": "view_attendance"
   }
 },
 {
   "model": "auth.permission",
   "pk": 57,
   "fields": {
-    "name": "Can add �����",
+    "name": "Can add QR 세션",
     "content_type": 15,
-    "codename": "add_waitlist"
+    "codename": "add_qrsession"
   }
 },
 {
   "model": "auth.permission",
   "pk": 58,
   "fields": {
-    "name": "Can change �����",
+    "name": "Can change QR 세션",
     "content_type": 15,
-    "codename": "change_waitlist"
+    "codename": "change_qrsession"
   }
 },
 {
   "model": "auth.permission",
   "pk": 59,
   "fields": {
-    "name": "Can delete �����",
+    "name": "Can delete QR 세션",
     "content_type": 15,
-    "codename": "delete_waitlist"
+    "codename": "delete_qrsession"
   }
 },
 {
   "model": "auth.permission",
   "pk": 60,
   "fields": {
-    "name": "Can view �����",
+    "name": "Can view QR 세션",
     "content_type": 15,
-    "codename": "view_waitlist"
+    "codename": "view_qrsession"
   }
 },
 {
   "model": "auth.permission",
   "pk": 61,
   "fields": {
-    "name": "Can add QR ��ĵ �α�",
+    "name": "Can add QR 스캔 로그",
     "content_type": 16,
     "codename": "add_qrscanlog"
   }
@@ -552,7 +552,7 @@
   "model": "auth.permission",
   "pk": 62,
   "fields": {
-    "name": "Can change QR ��ĵ �α�",
+    "name": "Can change QR 스캔 로그",
     "content_type": 16,
     "codename": "change_qrscanlog"
   }
@@ -561,7 +561,7 @@
   "model": "auth.permission",
   "pk": 63,
   "fields": {
-    "name": "Can delete QR ��ĵ �α�",
+    "name": "Can delete QR 스캔 로그",
     "content_type": 16,
     "codename": "delete_qrscanlog"
   }
@@ -570,7 +570,7 @@
   "model": "auth.permission",
   "pk": 64,
   "fields": {
-    "name": "Can view QR ��ĵ �α�",
+    "name": "Can view QR 스캔 로그",
     "content_type": 16,
     "codename": "view_qrscanlog"
   }
@@ -579,43 +579,43 @@
   "model": "auth.permission",
   "pk": 65,
   "fields": {
-    "name": "Can add QR ����",
+    "name": "Can add 수납",
     "content_type": 17,
-    "codename": "add_qrsession"
+    "codename": "add_payment"
   }
 },
 {
   "model": "auth.permission",
   "pk": 66,
   "fields": {
-    "name": "Can change QR ����",
+    "name": "Can change 수납",
     "content_type": 17,
-    "codename": "change_qrsession"
+    "codename": "change_payment"
   }
 },
 {
   "model": "auth.permission",
   "pk": 67,
   "fields": {
-    "name": "Can delete QR ����",
+    "name": "Can delete 수납",
     "content_type": 17,
-    "codename": "delete_qrsession"
+    "codename": "delete_payment"
   }
 },
 {
   "model": "auth.permission",
   "pk": 68,
   "fields": {
-    "name": "Can view QR ����",
+    "name": "Can view 수납",
     "content_type": 17,
-    "codename": "view_qrsession"
+    "codename": "view_payment"
   }
 },
 {
   "model": "auth.permission",
   "pk": 69,
   "fields": {
-    "name": "Can add ���� ��å",
+    "name": "Can add 할인 정책",
     "content_type": 18,
     "codename": "add_discount"
   }
@@ -624,7 +624,7 @@
   "model": "auth.permission",
   "pk": 70,
   "fields": {
-    "name": "Can change ���� ��å",
+    "name": "Can change 할인 정책",
     "content_type": 18,
     "codename": "change_discount"
   }
@@ -633,7 +633,7 @@
   "model": "auth.permission",
   "pk": 71,
   "fields": {
-    "name": "Can delete ���� ��å",
+    "name": "Can delete 할인 정책",
     "content_type": 18,
     "codename": "delete_discount"
   }
@@ -642,7 +642,7 @@
   "model": "auth.permission",
   "pk": 72,
   "fields": {
-    "name": "Can view ���� ��å",
+    "name": "Can view 할인 정책",
     "content_type": 18,
     "codename": "view_discount"
   }
@@ -651,223 +651,223 @@
   "model": "auth.permission",
   "pk": 73,
   "fields": {
-    "name": "Can add ȯ��",
+    "name": "Can add 학생 할인",
     "content_type": 19,
-    "codename": "add_refund"
+    "codename": "add_studentdiscount"
   }
 },
 {
   "model": "auth.permission",
   "pk": 74,
   "fields": {
-    "name": "Can change ȯ��",
+    "name": "Can change 학생 할인",
     "content_type": 19,
-    "codename": "change_refund"
+    "codename": "change_studentdiscount"
   }
 },
 {
   "model": "auth.permission",
   "pk": 75,
   "fields": {
-    "name": "Can delete ȯ��",
+    "name": "Can delete 학생 할인",
     "content_type": 19,
-    "codename": "delete_refund"
+    "codename": "delete_studentdiscount"
   }
 },
 {
   "model": "auth.permission",
   "pk": 76,
   "fields": {
-    "name": "Can view ȯ��",
+    "name": "Can view 학생 할인",
     "content_type": 19,
-    "codename": "view_refund"
+    "codename": "view_studentdiscount"
   }
 },
 {
   "model": "auth.permission",
   "pk": 77,
   "fields": {
-    "name": "Can add �л� ����",
+    "name": "Can add 환불",
     "content_type": 20,
-    "codename": "add_studentdiscount"
+    "codename": "add_refund"
   }
 },
 {
   "model": "auth.permission",
   "pk": 78,
   "fields": {
-    "name": "Can change �л� ����",
+    "name": "Can change 환불",
     "content_type": 20,
-    "codename": "change_studentdiscount"
+    "codename": "change_refund"
   }
 },
 {
   "model": "auth.permission",
   "pk": 79,
   "fields": {
-    "name": "Can delete �л� ����",
+    "name": "Can delete 환불",
     "content_type": 20,
-    "codename": "delete_studentdiscount"
+    "codename": "delete_refund"
   }
 },
 {
   "model": "auth.permission",
   "pk": 80,
   "fields": {
-    "name": "Can view �л� ����",
+    "name": "Can view 환불",
     "content_type": 20,
-    "codename": "view_studentdiscount"
+    "codename": "view_refund"
   }
 },
 {
   "model": "auth.permission",
   "pk": 81,
   "fields": {
-    "name": "Can add historical �ý��� ����",
+    "name": "Can add 메시지 로그",
     "content_type": 21,
-    "codename": "add_historicalsystemsetting"
+    "codename": "add_messagelog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 82,
   "fields": {
-    "name": "Can change historical �ý��� ����",
+    "name": "Can change 메시지 로그",
     "content_type": 21,
-    "codename": "change_historicalsystemsetting"
+    "codename": "change_messagelog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 83,
   "fields": {
-    "name": "Can delete historical �ý��� ����",
+    "name": "Can delete 메시지 로그",
     "content_type": 21,
-    "codename": "delete_historicalsystemsetting"
+    "codename": "delete_messagelog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 84,
   "fields": {
-    "name": "Can view historical �ý��� ����",
+    "name": "Can view 메시지 로그",
     "content_type": 21,
-    "codename": "view_historicalsystemsetting"
+    "codename": "view_messagelog"
   }
 },
 {
   "model": "auth.permission",
   "pk": 85,
   "fields": {
-    "name": "Can add �ý��� ����",
+    "name": "Can add 알림",
     "content_type": 22,
-    "codename": "add_systemsetting"
+    "codename": "add_notification"
   }
 },
 {
   "model": "auth.permission",
   "pk": 86,
   "fields": {
-    "name": "Can change �ý��� ����",
+    "name": "Can change 알림",
     "content_type": 22,
-    "codename": "change_systemsetting"
+    "codename": "change_notification"
   }
 },
 {
   "model": "auth.permission",
   "pk": 87,
   "fields": {
-    "name": "Can delete �ý��� ����",
+    "name": "Can delete 알림",
     "content_type": 22,
-    "codename": "delete_systemsetting"
+    "codename": "delete_notification"
   }
 },
 {
   "model": "auth.permission",
   "pk": 88,
   "fields": {
-    "name": "Can view �ý��� ����",
+    "name": "Can view 알림",
     "content_type": 22,
-    "codename": "view_systemsetting"
+    "codename": "view_notification"
   }
 },
 {
   "model": "auth.permission",
   "pk": 89,
   "fields": {
-    "name": "Can add �޽��� �α�",
+    "name": "Can add historical 시스템 설정",
     "content_type": 23,
-    "codename": "add_messagelog"
+    "codename": "add_historicalsystemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 90,
   "fields": {
-    "name": "Can change �޽��� �α�",
+    "name": "Can change historical 시스템 설정",
     "content_type": 23,
-    "codename": "change_messagelog"
+    "codename": "change_historicalsystemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 91,
   "fields": {
-    "name": "Can delete �޽��� �α�",
+    "name": "Can delete historical 시스템 설정",
     "content_type": 23,
-    "codename": "delete_messagelog"
+    "codename": "delete_historicalsystemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 92,
   "fields": {
-    "name": "Can view �޽��� �α�",
+    "name": "Can view historical 시스템 설정",
     "content_type": 23,
-    "codename": "view_messagelog"
+    "codename": "view_historicalsystemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 93,
   "fields": {
-    "name": "Can add �˸�",
+    "name": "Can add 시스템 설정",
     "content_type": 24,
-    "codename": "add_notification"
+    "codename": "add_systemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 94,
   "fields": {
-    "name": "Can change �˸�",
+    "name": "Can change 시스템 설정",
     "content_type": 24,
-    "codename": "change_notification"
+    "codename": "change_systemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 95,
   "fields": {
-    "name": "Can delete �˸�",
+    "name": "Can delete 시스템 설정",
     "content_type": 24,
-    "codename": "delete_notification"
+    "codename": "delete_systemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 96,
   "fields": {
-    "name": "Can view �˸�",
+    "name": "Can view 시스템 설정",
     "content_type": 24,
-    "codename": "view_notification"
+    "codename": "view_systemsetting"
   }
 },
 {
   "model": "auth.permission",
   "pk": 97,
   "fields": {
-    "name": "Can add ���",
+    "name": "Can add 백업",
     "content_type": 25,
     "codename": "add_backup"
   }
@@ -876,7 +876,7 @@
   "model": "auth.permission",
   "pk": 98,
   "fields": {
-    "name": "Can change ���",
+    "name": "Can change 백업",
     "content_type": 25,
     "codename": "change_backup"
   }
@@ -885,7 +885,7 @@
   "model": "auth.permission",
   "pk": 99,
   "fields": {
-    "name": "Can delete ���",
+    "name": "Can delete 백업",
     "content_type": 25,
     "codename": "delete_backup"
   }
@@ -894,17 +894,611 @@
   "model": "auth.permission",
   "pk": 100,
   "fields": {
-    "name": "Can view ���",
+    "name": "Can view 백업",
     "content_type": 25,
     "codename": "view_backup"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 101,
+  "fields": {
+    "name": "Can add 캘린더 이벤트",
+    "content_type": 26,
+    "codename": "add_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 102,
+  "fields": {
+    "name": "Can change 캘린더 이벤트",
+    "content_type": 26,
+    "codename": "change_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 103,
+  "fields": {
+    "name": "Can delete 캘린더 이벤트",
+    "content_type": 26,
+    "codename": "delete_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 104,
+  "fields": {
+    "name": "Can view 캘린더 이벤트",
+    "content_type": 26,
+    "codename": "view_calendarevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 105,
+  "fields": {
+    "name": "Can add 보강 수업",
+    "content_type": 27,
+    "codename": "add_makeupclass"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 106,
+  "fields": {
+    "name": "Can change 보강 수업",
+    "content_type": 27,
+    "codename": "change_makeupclass"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 107,
+  "fields": {
+    "name": "Can delete 보강 수업",
+    "content_type": 27,
+    "codename": "delete_makeupclass"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 108,
+  "fields": {
+    "name": "Can view 보강 수업",
+    "content_type": 27,
+    "codename": "view_makeupclass"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 109,
+  "fields": {
+    "name": "Can add 휴원 기간",
+    "content_type": 28,
+    "codename": "add_holidayrange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 110,
+  "fields": {
+    "name": "Can change 휴원 기간",
+    "content_type": 28,
+    "codename": "change_holidayrange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 111,
+  "fields": {
+    "name": "Can delete 휴원 기간",
+    "content_type": 28,
+    "codename": "delete_holidayrange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 112,
+  "fields": {
+    "name": "Can view 휴원 기간",
+    "content_type": 28,
+    "codename": "view_holidayrange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 113,
+  "fields": {
+    "name": "Can add 알림 템플릿",
+    "content_type": 29,
+    "codename": "add_notificationtemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 114,
+  "fields": {
+    "name": "Can change 알림 템플릿",
+    "content_type": 29,
+    "codename": "change_notificationtemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 115,
+  "fields": {
+    "name": "Can delete 알림 템플릿",
+    "content_type": 29,
+    "codename": "delete_notificationtemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 116,
+  "fields": {
+    "name": "Can view 알림 템플릿",
+    "content_type": 29,
+    "codename": "view_notificationtemplate"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 117,
+  "fields": {
+    "name": "Can add 알림 발송 작업",
+    "content_type": 30,
+    "codename": "add_notificationjob"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 118,
+  "fields": {
+    "name": "Can change 알림 발송 작업",
+    "content_type": 30,
+    "codename": "change_notificationjob"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 119,
+  "fields": {
+    "name": "Can delete 알림 발송 작업",
+    "content_type": 30,
+    "codename": "delete_notificationjob"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 120,
+  "fields": {
+    "name": "Can view 알림 발송 작업",
+    "content_type": 30,
+    "codename": "view_notificationjob"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 121,
+  "fields": {
+    "name": "Can add 알림 발송 로그",
+    "content_type": 31,
+    "codename": "add_notificationlog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 122,
+  "fields": {
+    "name": "Can change 알림 발송 로그",
+    "content_type": 31,
+    "codename": "change_notificationlog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 123,
+  "fields": {
+    "name": "Can delete 알림 발송 로그",
+    "content_type": 31,
+    "codename": "delete_notificationlog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 124,
+  "fields": {
+    "name": "Can view 알림 발송 로그",
+    "content_type": 31,
+    "codename": "view_notificationlog"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 125,
+  "fields": {
+    "name": "Can add 주간/월간 보고서",
+    "content_type": 32,
+    "codename": "add_weeklyreport"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 126,
+  "fields": {
+    "name": "Can change 주간/월간 보고서",
+    "content_type": 32,
+    "codename": "change_weeklyreport"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 127,
+  "fields": {
+    "name": "Can delete 주간/월간 보고서",
+    "content_type": 32,
+    "codename": "delete_weeklyreport"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 128,
+  "fields": {
+    "name": "Can view 주간/월간 보고서",
+    "content_type": 32,
+    "codename": "view_weeklyreport"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 129,
+  "fields": {
+    "name": "Can add 과목",
+    "content_type": 33,
+    "codename": "add_subject"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 130,
+  "fields": {
+    "name": "Can change 과목",
+    "content_type": 33,
+    "codename": "change_subject"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 131,
+  "fields": {
+    "name": "Can delete 과목",
+    "content_type": 33,
+    "codename": "delete_subject"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 132,
+  "fields": {
+    "name": "Can view 과목",
+    "content_type": 33,
+    "codename": "view_subject"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 133,
+  "fields": {
+    "name": "Can add 시험",
+    "content_type": 34,
+    "codename": "add_exam"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 134,
+  "fields": {
+    "name": "Can change 시험",
+    "content_type": 34,
+    "codename": "change_exam"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 135,
+  "fields": {
+    "name": "Can delete 시험",
+    "content_type": 34,
+    "codename": "delete_exam"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 136,
+  "fields": {
+    "name": "Can view 시험",
+    "content_type": 34,
+    "codename": "view_exam"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 137,
+  "fields": {
+    "name": "Can add 성적",
+    "content_type": 35,
+    "codename": "add_score"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 138,
+  "fields": {
+    "name": "Can change 성적",
+    "content_type": 35,
+    "codename": "change_score"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 139,
+  "fields": {
+    "name": "Can delete 성적",
+    "content_type": 35,
+    "codename": "delete_score"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 140,
+  "fields": {
+    "name": "Can view 성적",
+    "content_type": 35,
+    "codename": "view_score"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 141,
+  "fields": {
+    "name": "Can add 학습 목표",
+    "content_type": 36,
+    "codename": "add_learninggoal"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 142,
+  "fields": {
+    "name": "Can change 학습 목표",
+    "content_type": 36,
+    "codename": "change_learninggoal"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 143,
+  "fields": {
+    "name": "Can delete 학습 목표",
+    "content_type": 36,
+    "codename": "delete_learninggoal"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 144,
+  "fields": {
+    "name": "Can view 학습 목표",
+    "content_type": 36,
+    "codename": "view_learninggoal"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 145,
+  "fields": {
+    "name": "Can add 성적표",
+    "content_type": 37,
+    "codename": "add_reportcard"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 146,
+  "fields": {
+    "name": "Can change 성적표",
+    "content_type": 37,
+    "codename": "change_reportcard"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 147,
+  "fields": {
+    "name": "Can delete 성적표",
+    "content_type": 37,
+    "codename": "delete_reportcard"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 148,
+  "fields": {
+    "name": "Can view 성적표",
+    "content_type": 37,
+    "codename": "view_reportcard"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 149,
+  "fields": {
+    "name": "Can add 학부모 계정",
+    "content_type": 38,
+    "codename": "add_parentaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 150,
+  "fields": {
+    "name": "Can change 학부모 계정",
+    "content_type": 38,
+    "codename": "change_parentaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 151,
+  "fields": {
+    "name": "Can delete 학부모 계정",
+    "content_type": 38,
+    "codename": "delete_parentaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 152,
+  "fields": {
+    "name": "Can view 학부모 계정",
+    "content_type": 38,
+    "codename": "view_parentaccount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 153,
+  "fields": {
+    "name": "Can add 학부모 초대",
+    "content_type": 39,
+    "codename": "add_parentinvite"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 154,
+  "fields": {
+    "name": "Can change 학부모 초대",
+    "content_type": 39,
+    "codename": "change_parentinvite"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 155,
+  "fields": {
+    "name": "Can delete 학부모 초대",
+    "content_type": 39,
+    "codename": "delete_parentinvite"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 156,
+  "fields": {
+    "name": "Can view 학부모 초대",
+    "content_type": 39,
+    "codename": "view_parentinvite"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 157,
+  "fields": {
+    "name": "Can add 학부모 메시지",
+    "content_type": 40,
+    "codename": "add_parentmessage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 158,
+  "fields": {
+    "name": "Can change 학부모 메시지",
+    "content_type": 40,
+    "codename": "change_parentmessage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 159,
+  "fields": {
+    "name": "Can delete 학부모 메시지",
+    "content_type": 40,
+    "codename": "delete_parentmessage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 160,
+  "fields": {
+    "name": "Can view 학부모 메시지",
+    "content_type": 40,
+    "codename": "view_parentmessage"
   }
 },
 {
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$600000$FYkZgcrfFFgQVD8kwXcMnv$OCEBdMt1G5tA+CW45FNEEKn+zS4n2i+PCpd4J6KGnNg=",
-    "last_login": "2025-12-17T23:12:22.458Z",
+    "password": "pbkdf2_sha256$600000$NOfw7bPXsOLUkXgFJqPl8F$W6XDVEN8HTdXOtc+rCeT3PKa84P6Rrr7C2X6RPZM5Vc=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "teacher_kim",
+    "first_name": "민준",
+    "last_name": "김",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-19T11:16:45.829Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$VO33S85taG8Nm2aTc2aLui$SvZM4VqIFiC8TZxcvxoMVIKUkr2TIogwQ59J8qxFrts=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "teacher_lee",
+    "first_name": "서연",
+    "last_name": "이",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-19T11:16:46.146Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$UxZoirk3ynin1u4wtdYUSp$M2xoREfdrKkF6phPfxWtXjkuD5bZAwzCMlNVAjwAZEM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "teacher_park",
+    "first_name": "지훈",
+    "last_name": "박",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-19T11:16:46.504Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$9JqlzNGJk5kOkLLIGgpYTh$NQ04LD0zecRBZl/nHC2eqZyG8Q3orYv+Qct+Q7iIYSw=",
+    "last_login": "2025-12-19T11:23:38.050Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -912,7 +1506,7 @@
     "email": "admin@example.com",
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2025-12-13T21:13:20.579Z",
+    "date_joined": "2025-12-19T11:19:58.064Z",
     "groups": [],
     "user_permissions": []
   }
@@ -930,7 +1524,7 @@
   "pk": 2,
   "fields": {
     "app_label": "auth",
-    "model": "group"
+    "model": "permission"
   }
 },
 {
@@ -938,7 +1532,7 @@
   "pk": 3,
   "fields": {
     "app_label": "auth",
-    "model": "permission"
+    "model": "group"
   }
 },
 {
@@ -970,7 +1564,7 @@
   "pk": 7,
   "fields": {
     "app_label": "accounts",
-    "model": "employee"
+    "model": "role"
   }
 },
 {
@@ -978,7 +1572,7 @@
   "pk": 8,
   "fields": {
     "app_label": "accounts",
-    "model": "role"
+    "model": "employee"
   }
 },
 {
@@ -1009,21 +1603,13 @@
   "model": "contenttypes.contenttype",
   "pk": 12,
   "fields": {
-    "app_label": "attendance",
-    "model": "attendance"
+    "app_label": "students",
+    "model": "waitlist"
   }
 },
 {
   "model": "contenttypes.contenttype",
   "pk": 13,
-  "fields": {
-    "app_label": "payments",
-    "model": "payment"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 14,
   "fields": {
     "app_label": "students",
     "model": "consultlog"
@@ -1031,10 +1617,18 @@
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "attendance",
+    "model": "attendance"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
   "pk": 15,
   "fields": {
-    "app_label": "students",
-    "model": "waitlist"
+    "app_label": "attendance",
+    "model": "qrsession"
   }
 },
 {
@@ -1049,8 +1643,8 @@
   "model": "contenttypes.contenttype",
   "pk": 17,
   "fields": {
-    "app_label": "attendance",
-    "model": "qrsession"
+    "app_label": "payments",
+    "model": "payment"
   }
 },
 {
@@ -1066,7 +1660,7 @@
   "pk": 19,
   "fields": {
     "app_label": "payments",
-    "model": "refund"
+    "model": "studentdiscount"
   }
 },
 {
@@ -1074,7 +1668,7 @@
   "pk": 20,
   "fields": {
     "app_label": "payments",
-    "model": "studentdiscount"
+    "model": "refund"
   }
 },
 {
@@ -1082,7 +1676,7 @@
   "pk": 21,
   "fields": {
     "app_label": "core",
-    "model": "historicalsystemsetting"
+    "model": "messagelog"
   }
 },
 {
@@ -1090,7 +1684,7 @@
   "pk": 22,
   "fields": {
     "app_label": "core",
-    "model": "systemsetting"
+    "model": "notification"
   }
 },
 {
@@ -1098,7 +1692,7 @@
   "pk": 23,
   "fields": {
     "app_label": "core",
-    "model": "messagelog"
+    "model": "historicalsystemsetting"
   }
 },
 {
@@ -1106,7 +1700,7 @@
   "pk": 24,
   "fields": {
     "app_label": "core",
-    "model": "notification"
+    "model": "systemsetting"
   }
 },
 {
@@ -1118,19 +1712,438 @@
   }
 },
 {
-  "model": "sessions.session",
-  "pk": "1sdfgccrbmflle4mjsu7ab3hk27iygx8",
+  "model": "contenttypes.contenttype",
+  "pk": 26,
   "fields": {
-    "session_data": ".eJxVjEsOAiEQBe_C2hBAPo1L956BNHQrowaSYWZlvLtOMgvdvqp6L5FwXWpaB89pInESWhx-t4zlwW0DdMd267L0tsxTlpsidzrkpRM_z7v7d1Bx1G-tHOQjowfUMYLRZIhd9leEQkFZHxxa1OyB0RVkwGhKyByCjZqz0uL9AemwODg:1vW0gw:wJQRLX8JEC6xX4juZduS0Y1FeSQ7Nx0Yc3pcDmxdvlQ",
-    "expire_date": "2025-12-31T23:12:22.464Z"
+    "app_label": "schedule",
+    "model": "calendarevent"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 27,
+  "fields": {
+    "app_label": "schedule",
+    "model": "makeupclass"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 28,
+  "fields": {
+    "app_label": "schedule",
+    "model": "holidayrange"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 29,
+  "fields": {
+    "app_label": "notifications",
+    "model": "notificationtemplate"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 30,
+  "fields": {
+    "app_label": "notifications",
+    "model": "notificationjob"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 31,
+  "fields": {
+    "app_label": "notifications",
+    "model": "notificationlog"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 32,
+  "fields": {
+    "app_label": "notifications",
+    "model": "weeklyreport"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 33,
+  "fields": {
+    "app_label": "academics",
+    "model": "subject"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 34,
+  "fields": {
+    "app_label": "academics",
+    "model": "exam"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 35,
+  "fields": {
+    "app_label": "academics",
+    "model": "score"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 36,
+  "fields": {
+    "app_label": "academics",
+    "model": "learninggoal"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 37,
+  "fields": {
+    "app_label": "academics",
+    "model": "reportcard"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 38,
+  "fields": {
+    "app_label": "parent_portal",
+    "model": "parentaccount"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 39,
+  "fields": {
+    "app_label": "parent_portal",
+    "model": "parentinvite"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 40,
+  "fields": {
+    "app_label": "parent_portal",
+    "model": "parentmessage"
   }
 },
 {
   "model": "sessions.session",
-  "pk": "xwm5n3roznx97hj9mvw3id36ybg3ed4c",
+  "pk": "1pbeukq5h398hvcpunfi9ney1doc1gjd",
   "fields": {
-    "session_data": ".eJxVjDsOwjAQBe_iGln-bjAlfc5geb1rHECOFCcV4u4QKQW0b2beS8S0rTVunZc4kbgILU6_G6b84LYDuqd2m2We27pMKHdFHrTLcSZ-Xg_376CmXr81hIFS8YjgitZkHQYOgwOXzpZtMVC8MyYo5ZVVCGTQAhATe8iqeC_eH9hjN3c:1vUWyX:q3ozuYfd6lbSoWWiD_D_x48lfITcShAzy4tluS4QWv8",
-    "expire_date": "2025-12-27T21:16:25.279Z"
+    "session_data": ".eJxVjEEOwiAQRe_C2hAQKODSfc9AhplBqoYmpV0Z765NutDtf-_9l0iwrTVtnZc0kbgIK06_WwZ8cNsB3aHdZolzW5cpy12RB-1ynImf18P9O6jQ67cGr7S3GF3IxMGwjfasvFMGCyFHIj_owpGDNSYis8uZwUVEA3ooBcX7A-uQONw:1vWYaA:mP6bFFg3PuFR0gkCs42g1F9sLekJfMUZJomPwCewG9s",
+    "expire_date": "2026-01-02T11:23:38.057Z"
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 1,
+  "fields": {
+    "name": "teacher",
+    "description": "강사",
+    "created_at": "2025-12-19T11:16:45.821Z"
+  }
+},
+{
+  "model": "accounts.employee",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "role": 1,
+    "phone": "010-7841-8985",
+    "hire_date": "2024-02-06",
+    "is_active": true,
+    "profile_image": "",
+    "created_at": "2025-12-19T11:16:46.133Z",
+    "updated_at": "2025-12-19T11:16:46.133Z"
+  }
+},
+{
+  "model": "accounts.employee",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "role": 1,
+    "phone": "010-6640-2010",
+    "hire_date": "2024-07-07",
+    "is_active": true,
+    "profile_image": "",
+    "created_at": "2025-12-19T11:16:46.495Z",
+    "updated_at": "2025-12-19T11:16:46.495Z"
+  }
+},
+{
+  "model": "accounts.employee",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "role": 1,
+    "phone": "010-7980-9910",
+    "hire_date": "2024-06-05",
+    "is_active": true,
+    "profile_image": "",
+    "created_at": "2025-12-19T11:16:46.815Z",
+    "updated_at": "2025-12-19T11:16:46.815Z"
+  }
+},
+{
+  "model": "teachers.teacher",
+  "pk": 1,
+  "fields": {
+    "employee": 1,
+    "subject": "수학",
+    "bio": "김민준 강사입니다.",
+    "is_active": true,
+    "created_at": "2025-12-19T11:16:46.139Z",
+    "updated_at": "2025-12-19T11:16:46.139Z"
+  }
+},
+{
+  "model": "teachers.teacher",
+  "pk": 2,
+  "fields": {
+    "employee": 2,
+    "subject": "영어",
+    "bio": "이서연 강사입니다.",
+    "is_active": true,
+    "created_at": "2025-12-19T11:16:46.499Z",
+    "updated_at": "2025-12-19T11:16:46.499Z"
+  }
+},
+{
+  "model": "teachers.teacher",
+  "pk": 3,
+  "fields": {
+    "employee": 3,
+    "subject": "국어",
+    "bio": "박지훈 강사입니다.",
+    "is_active": true,
+    "created_at": "2025-12-19T11:16:46.819Z",
+    "updated_at": "2025-12-19T11:16:46.819Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 1,
+  "fields": {
+    "name": "김하준",
+    "gender": "M",
+    "birth_date": "2015-08-26",
+    "phone": "010-9356-3578",
+    "parent_name": "김부모",
+    "parent_phone": "010-9804-5986",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-09-27",
+    "withdrawal_date": null,
+    "school_name": "강남초등학교",
+    "grade": "초3",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.825Z",
+    "updated_at": "2025-12-19T11:16:46.825Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 2,
+  "fields": {
+    "name": "이서윤",
+    "gender": "F",
+    "birth_date": "2011-02-05",
+    "phone": "010-2580-7388",
+    "parent_name": "이부모",
+    "parent_phone": "010-4718-7750",
+    "parent_relation": "아버지",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-07-03",
+    "withdrawal_date": null,
+    "school_name": "송파초등학교",
+    "grade": "초4",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.830Z",
+    "updated_at": "2025-12-19T11:16:46.830Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 3,
+  "fields": {
+    "name": "박도윤",
+    "gender": "M",
+    "birth_date": "2016-03-14",
+    "phone": "010-2611-2747",
+    "parent_name": "박부모",
+    "parent_phone": "010-9293-9189",
+    "parent_relation": "아버지",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-03-02",
+    "withdrawal_date": null,
+    "school_name": "서울초등학교",
+    "grade": "초3",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.836Z",
+    "updated_at": "2025-12-19T11:16:46.836Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 4,
+  "fields": {
+    "name": "최하은",
+    "gender": "F",
+    "birth_date": "2010-09-05",
+    "phone": "010-3024-4435",
+    "parent_name": "최부모",
+    "parent_phone": "010-5004-5496",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-10-07",
+    "withdrawal_date": null,
+    "school_name": "송파초등학교",
+    "grade": "초3",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.842Z",
+    "updated_at": "2025-12-19T11:16:46.842Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 5,
+  "fields": {
+    "name": "정시우",
+    "gender": "M",
+    "birth_date": "2010-01-24",
+    "phone": "010-9436-4497",
+    "parent_name": "정부모",
+    "parent_phone": "010-3035-7860",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-03-14",
+    "withdrawal_date": null,
+    "school_name": "송파초등학교",
+    "grade": "초5",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.848Z",
+    "updated_at": "2025-12-19T11:16:46.848Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 6,
+  "fields": {
+    "name": "강지아",
+    "gender": "F",
+    "birth_date": "2010-07-14",
+    "phone": "010-8930-4930",
+    "parent_name": "강부모",
+    "parent_phone": "010-8656-2915",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-12-27",
+    "withdrawal_date": null,
+    "school_name": "강남초등학교",
+    "grade": "초2",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.854Z",
+    "updated_at": "2025-12-19T11:16:46.854Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 7,
+  "fields": {
+    "name": "조주원",
+    "gender": "M",
+    "birth_date": "2013-08-14",
+    "phone": "010-8427-6294",
+    "parent_name": "조부모",
+    "parent_phone": "010-9837-4300",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-01-17",
+    "withdrawal_date": null,
+    "school_name": "송파초등학교",
+    "grade": "중3",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.860Z",
+    "updated_at": "2025-12-19T11:16:46.860Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 8,
+  "fields": {
+    "name": "윤서아",
+    "gender": "F",
+    "birth_date": "2016-08-23",
+    "phone": "010-7043-3021",
+    "parent_name": "윤부모",
+    "parent_phone": "010-3545-2899",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-11-21",
+    "withdrawal_date": null,
+    "school_name": "송파초등학교",
+    "grade": "초1",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.867Z",
+    "updated_at": "2025-12-19T11:16:46.867Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 9,
+  "fields": {
+    "name": "장지호",
+    "gender": "M",
+    "birth_date": "2015-11-20",
+    "phone": "010-1377-1565",
+    "parent_name": "장부모",
+    "parent_phone": "010-3687-5421",
+    "parent_relation": "어머니",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-02-04",
+    "withdrawal_date": null,
+    "school_name": "서울초등학교",
+    "grade": "초5",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.874Z",
+    "updated_at": "2025-12-19T11:16:46.874Z"
+  }
+},
+{
+  "model": "students.student",
+  "pk": 10,
+  "fields": {
+    "name": "임민서",
+    "gender": "F",
+    "birth_date": "2012-11-01",
+    "phone": "010-9041-6806",
+    "parent_name": "임부모",
+    "parent_phone": "010-1954-3784",
+    "parent_relation": "아버지",
+    "assigned_class": null,
+    "status": "enrolled",
+    "enrollment_date": "2024-05-01",
+    "withdrawal_date": null,
+    "school_name": "강남초등학교",
+    "grade": "중1",
+    "note": "",
+    "created_at": "2025-12-19T11:16:46.879Z",
+    "updated_at": "2025-12-19T11:16:46.879Z"
   }
 }
 ]

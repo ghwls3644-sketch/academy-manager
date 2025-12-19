@@ -1,6 +1,6 @@
 ﻿{% load dashboard_extras %}
 <!DOCTYPE html>
-<html lang="ko" data-bs-theme="dark">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/style.css?v=2" rel="stylesheet">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -48,23 +48,64 @@
                             <i class="bi bi-building me-1"></i>반 관리
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'attendance' %}active{% endif %}"
-                            href="{% url 'attendance:list' %}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'attendance' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-calendar-check me-1"></i>출결 관리
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'attendance:list' %}">
+                                <i class="bi bi-list-check me-2"></i>출결 현황
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'attendance:qr_generate' %}">
+                                <i class="bi bi-qr-code me-2"></i>QR 코드 생성
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'attendance:qr_scan' %}">
+                                <i class="bi bi-qr-code-scan me-2"></i>QR 스캔
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'attendance:qr_logs' %}">
+                                <i class="bi bi-clock-history me-2"></i>QR 스캔 로그
+                            </a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'payments' %}active{% endif %}"
-                            href="{% url 'payments:list' %}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'payments' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-credit-card me-1"></i>수납 관리
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'payments:list' %}">
+                                <i class="bi bi-list-ul me-2"></i>수납 현황
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'payments:unpaid' %}">
+                                <i class="bi bi-exclamation-circle me-2"></i>미납자 목록
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'payments:create' %}">
+                                <i class="bi bi-plus-circle me-2"></i>수납 등록
+                            </a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'schedule' %}active{% endif %}"
-                            href="{% url 'schedule:calendar' %}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'schedule' or request.resolver_match.app_name == 'timetable' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-calendar3 me-1"></i>일정 관리
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'schedule:calendar' %}">
+                                <i class="bi bi-calendar-event me-2"></i>캘린더
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'timetable:index' %}">
+                                <i class="bi bi-table me-2"></i>시간표
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'schedule:holiday_list' %}">
+                                <i class="bi bi-calendar-x me-2"></i>휴원 관리
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'schedule:makeup_list' %}">
+                                <i class="bi bi-arrow-repeat me-2"></i>보강 관리
+                            </a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.app_name == 'teachers' %}active{% endif %}"
@@ -72,20 +113,84 @@
                             <i class="bi bi-person-badge me-1"></i>강사 관리
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'notifications' %}active{% endif %}"
-                            href="{% url 'notifications:template_list' %}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'notifications' or request.resolver_match.app_name == 'messaging' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-bell me-1"></i>알림
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'notifications:send' %}">
+                                <i class="bi bi-send me-2"></i>알림 발송
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'notifications:job_list' %}">
+                                <i class="bi bi-list-task me-2"></i>발송 작업
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'notifications:template_list' %}">
+                                <i class="bi bi-file-text me-2"></i>템플릿 관리
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'notifications:report_list' %}">
+                                <i class="bi bi-file-earmark-bar-graph me-2"></i>보고서
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'messaging:send' %}">
+                                <i class="bi bi-chat-dots me-2"></i>메시지 발송
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'messaging:logs' %}">
+                                <i class="bi bi-clock-history me-2"></i>메시지 로그
+                            </a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'academics' %}active{% endif %}"
-                            href="{% url 'academics:exam_list' %}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'academics' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-journal-text me-1"></i>성적
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'academics:exam_list' %}">
+                                <i class="bi bi-pencil-square me-2"></i>시험 관리
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'academics:subject_list' %}">
+                                <i class="bi bi-book me-2"></i>과목 관리
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'academics:goal_list' %}">
+                                <i class="bi bi-bullseye me-2"></i>학습 목표
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'academics:report_card_list' %}">
+                                <i class="bi bi-file-earmark-text me-2"></i>성적표
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'exports' %}active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-download me-1"></i>내보내기
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'exports:hub' %}">
+                                <i class="bi bi-box-arrow-up-right me-2"></i>내보내기 허브
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'exports:students' %}">
+                                <i class="bi bi-people me-2"></i>학생 데이터
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'exports:attendance' %}">
+                                <i class="bi bi-calendar-check me-2"></i>출결 데이터
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'exports:payments' %}">
+                                <i class="bi bi-credit-card me-2"></i>수납 데이터
+                            </a></li>
+                        </ul>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
+                    <!-- Theme Toggle -->
+                    <li class="nav-item me-2">
+                        <button class="theme-toggle" id="themeToggle" title="테마 전환">
+                            <i class="bi bi-moon-fill" id="themeIcon"></i>
+                        </button>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle me-1"></i>{{ user.username }}
@@ -139,8 +244,146 @@
     </footer>
     {% endif %}
 
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"></div>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Theme & Toast & Table Utils JS -->
+    <script>
+    // ===== Theme Toggle =====
+    (function() {
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        // Get saved theme or default to dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-bs-theme', savedTheme);
+        updateIcon(savedTheme);
+        
+        function updateIcon(theme) {
+            if (themeIcon) {
+                themeIcon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+            }
+        }
+        
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                html.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcon(newTheme);
+                
+                showToast(newTheme === 'dark' ? '다크 모드로 전환했습니다' : '라이트 모드로 전환했습니다', 'info');
+            });
+        }
+    })();
+    
+    // ===== Toast Functions =====
+    function showToast(message, type = 'info', duration = 3000) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        
+        const toastId = 'toast-' + Date.now();
+        const iconMap = {
+            'success': 'bi-check-circle-fill',
+            'error': 'bi-x-circle-fill',
+            'warning': 'bi-exclamation-triangle-fill',
+            'info': 'bi-info-circle-fill'
+        };
+        
+        const toastHtml = `
+            <div id="${toastId}" class="toast toast-${type}" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body d-flex align-items-center">
+                    <i class="bi ${iconMap[type] || iconMap['info']} me-2"></i>
+                    <span>${message}</span>
+                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', toastHtml);
+        
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, { delay: duration });
+        toast.show();
+        
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
+    }
+    
+    // ===== Loading Button =====
+    function setButtonLoading(button, loading = true) {
+        if (loading) {
+            button.classList.add('btn-loading');
+            button.disabled = true;
+            button.dataset.originalText = button.innerHTML;
+            button.innerHTML = '<span class="btn-text">' + button.innerHTML + '</span>';
+        } else {
+            button.classList.remove('btn-loading');
+            button.disabled = false;
+            if (button.dataset.originalText) {
+                button.innerHTML = button.dataset.originalText;
+            }
+        }
+    }
+    
+    // ===== Table Sorting =====
+    function initTableSorting(tableId) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+        
+        const headers = table.querySelectorAll('th.sortable');
+        
+        headers.forEach((header, index) => {
+            header.addEventListener('click', function() {
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                const isAsc = header.classList.contains('asc');
+                
+                // Reset other headers
+                headers.forEach(h => h.classList.remove('asc', 'desc'));
+                
+                // Toggle sort direction
+                header.classList.add(isAsc ? 'desc' : 'asc');
+                
+                // Sort rows
+                rows.sort((a, b) => {
+                    const aVal = a.cells[index].textContent.trim();
+                    const bVal = b.cells[index].textContent.trim();
+                    
+                    // Try numeric sort first
+                    const aNum = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
+                    const bNum = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
+                    
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return isAsc ? bNum - aNum : aNum - bNum;
+                    }
+                    
+                    // Fallback to string sort
+                    return isAsc ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+                });
+                
+                // Re-append sorted rows
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+    }
+    
+    // Auto-init for forms with loading
+    document.querySelectorAll('form[data-loading]').forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) setButtonLoading(submitBtn, true);
+        });
+    });
+    </script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 

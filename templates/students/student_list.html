@@ -106,14 +106,14 @@
     <!-- 학생 목록 -->
     <div class="card">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" id="studentTable">
                 <thead>
                     <tr>
-                        <th>이름</th>
-                        <th>반</th>
+                        <th class="sortable">이름</th>
+                        <th class="sortable">반</th>
                         <th>연락처</th>
                         <th>학부모 연락처</th>
-                        <th>상태</th>
+                        <th class="sortable">상태</th>
                         <th class="text-end">관리</th>
                     </tr>
                 </thead>
@@ -148,7 +148,8 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
+                        <td colspan="6" class="table-empty">
+                            <i class="bi bi-inbox"></i>
                             등록된 학생이 없습니다.
                         </td>
                     </tr>
@@ -187,4 +188,11 @@
     </nav>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize table sorting
+    initTableSorting('studentTable');
+</script>
 {% endblock %}

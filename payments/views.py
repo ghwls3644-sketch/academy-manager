@@ -7,12 +7,13 @@ from django.utils import timezone
 from .models import Payment
 from .forms import PaymentForm
 from students.models import Student
+from core.utils import get_year_choices
 
 
 @login_required
 def payment_list(request):
     """수납 목록"""
-    payments = Payment.objects.select_related('student').all()
+    payments = Payment.objects.select_related('student', 'student__assigned_class').all()
     
     # 년/월 필터
     year = request.GET.get('year', str(timezone.now().year))
@@ -47,13 +48,14 @@ def payment_list(request):
     stats['unpaid_count'] = next((s['count'] for s in status_counts if s['status'] == 'unpaid'), 0)
     stats['partial_count'] = next((s['count'] for s in status_counts if s['status'] == 'partial'), 0)
     
-    # 페이지네이션
+    # 정렬 및 페이지네이션
+    payments = payments.order_by('-year', '-month', '-payment_date')
     paginator = Paginator(payments, 20)
     page = request.GET.get('page', 1)
     payments = paginator.get_page(page)
     
-    # 년도 목록
-    years = list(range(timezone.now().year - 2, timezone.now().year + 2))
+    # 년도 목록 - 유틸 함수 사용
+    years = get_year_choices()
     
     return render(request, 'payments/payment_list.html', {
         'payments': payments,
@@ -137,7 +139,7 @@ def unpaid_list(request):
         status__in=['unpaid', 'partial']
     ).order_by('student__name')
     
-    years = list(range(timezone.now().year - 2, timezone.now().year + 2))
+    years = get_year_choices()
     
     return render(request, 'payments/unpaid_list.html', {
         'payments': payments,

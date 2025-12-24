@@ -14,6 +14,30 @@
     .fc-daygrid-day.fc-day-today {
         background-color: rgba(66, 133, 244, 0.1) !important;
     }
+    
+    /* 주말 스타일 */
+    .fc-day-sat {
+        background-color: rgba(66, 133, 244, 0.08) !important;
+    }
+    .fc-day-sat .fc-daygrid-day-number {
+        color: #4285f4 !important;
+    }
+    .fc-day-sun {
+        background-color: rgba(234, 67, 53, 0.08) !important;
+    }
+    .fc-day-sun .fc-daygrid-day-number {
+        color: #ea4335 !important;
+    }
+    
+    /* 공휴일 스타일 */
+    .fc-day-holiday {
+        background-color: rgba(234, 67, 53, 0.15) !important;
+    }
+    .fc-day-holiday .fc-daygrid-day-number {
+        color: #ea4335 !important;
+        font-weight: bold;
+    }
+    
     .event-tooltip {
         position: absolute;
         z-index: 10001;
@@ -35,6 +59,15 @@
         height: 14px;
         border-radius: 3px;
         margin-right: 6px;
+    }
+    
+    /* 공휴일 이벤트 라벨 */
+    .fc-holiday-event {
+        background-color: transparent !important;
+        border: none !important;
+        color: #ea4335 !important;
+        font-size: 0.7rem;
+        font-weight: 500;
     }
 </style>
 {% endblock %}
@@ -79,20 +112,25 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="legend-item">
-                        <span class="legend-color" style="background: #4285f4;"></span> 정규 수업
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background: #34a853;"></span> 보강
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background: #ea4335;"></span> 휴원
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background: #fbbc04;"></span> 특강
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background: #9c27b0;"></span> 캠프
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #4285f4;"></span> 정규 수업
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #34a853;"></span> 보강
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #ea4335;"></span> 휴원
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #fbbc04;"></span> 특강
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color border" style="background: rgba(66, 133, 244, 0.2);"></span> 토요일
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color border" style="background: rgba(234, 67, 53, 0.2);"></span> 일요일/공휴일
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,6 +169,105 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
     
+    // 한국 공휴일 (2024-2026)
+    var koreanHolidays = {
+        // 2024
+        '2024-01-01': '신정',
+        '2024-02-09': '설날 연휴',
+        '2024-02-10': '설날',
+        '2024-02-11': '설날 연휴',
+        '2024-02-12': '대체공휴일',
+        '2024-03-01': '삼일절',
+        '2024-04-10': '국회의원선거일',
+        '2024-05-05': '어린이날',
+        '2024-05-06': '대체공휴일',
+        '2024-05-15': '부처님오신날',
+        '2024-06-06': '현충일',
+        '2024-08-15': '광복절',
+        '2024-09-16': '추석 연휴',
+        '2024-09-17': '추석',
+        '2024-09-18': '추석 연휴',
+        '2024-10-03': '개천절',
+        '2024-10-09': '한글날',
+        '2024-12-25': '크리스마스',
+        // 2025
+        '2025-01-01': '신정',
+        '2025-01-28': '설날 연휴',
+        '2025-01-29': '설날',
+        '2025-01-30': '설날 연휴',
+        '2025-03-01': '삼일절',
+        '2025-05-05': '어린이날',
+        '2025-05-06': '부처님오신날',
+        '2025-06-06': '현충일',
+        '2025-08-15': '광복절',
+        '2025-10-03': '개천절',
+        '2025-10-05': '추석 연휴',
+        '2025-10-06': '추석',
+        '2025-10-07': '추석 연휴',
+        '2025-10-09': '한글날',
+        '2025-12-25': '크리스마스',
+        // 2026
+        '2026-01-01': '신정',
+        '2026-02-16': '설날 연휴',
+        '2026-02-17': '설날',
+        '2026-02-18': '설날 연휴',
+        '2026-03-01': '삼일절',
+        '2026-05-05': '어린이날',
+        '2026-05-24': '부처님오신날',
+        '2026-06-06': '현충일',
+        '2026-08-15': '광복절',
+        '2026-09-24': '추석 연휴',
+        '2026-09-25': '추석',
+        '2026-09-26': '추석 연휴',
+        '2026-10-03': '개천절',
+        '2026-10-09': '한글날',
+        '2026-12-25': '크리스마스'
+    };
+    
+    // 공휴일 확인 함수
+    function isHoliday(dateStr) {
+        return koreanHolidays[dateStr] || null;
+    }
+    
+    // 로컬 날짜 문자열 변환 (타임존 이슈 방지)
+    function formatLocalDate(date) {
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    }
+    
+    // 공휴일 이벤트 생성
+    function getHolidayEvents(start, end) {
+        var events = [];
+        var current = new Date(start);
+        var endDate = new Date(end);
+        
+        while (current <= endDate) {
+            var dateStr = formatLocalDate(current);
+            var holidayName = isHoliday(dateStr);
+            if (holidayName) {
+                events.push({
+                    id: 'holiday_' + dateStr,
+                    title: '🎌 ' + holidayName,
+                    start: dateStr,
+                    allDay: true,
+                    display: 'block',
+                    backgroundColor: 'transparent',
+                    borderColor: 'transparent',
+                    textColor: '#ea4335',
+                    classNames: ['fc-holiday-event'],
+                    extendedProps: {
+                        type: 'public_holiday',
+                        type_display: '공휴일'
+                    }
+                });
+            }
+            current.setDate(current.getDate() + 1);
+        }
+        return events;
+    }
+    
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'ko',
@@ -146,6 +283,13 @@ document.addEventListener('DOMContentLoaded', function() {
             day: '일',
             list: '목록'
         },
+        // 공휴일 날짜 셀 스타일 적용
+        dayCellDidMount: function(info) {
+            var dateStr = formatLocalDate(info.date);
+            if (isHoliday(dateStr)) {
+                info.el.classList.add('fc-day-holiday');
+            }
+        },
         events: function(info, successCallback, failureCallback) {
             var classId = document.getElementById('classFilter').value;
             var teacherId = document.getElementById('teacherFilter').value;
@@ -156,12 +300,21 @@ document.addEventListener('DOMContentLoaded', function() {
             
             fetch(url)
                 .then(response => response.json())
-                .then(data => successCallback(data))
+                .then(data => {
+                    // 공휴일 이벤트 추가
+                    var holidayEvents = getHolidayEvents(info.start, info.end);
+                    successCallback(data.concat(holidayEvents));
+                })
                 .catch(error => failureCallback(error));
         },
         eventClick: function(info) {
             var event = info.event;
             var props = event.extendedProps;
+            
+            // 공휴일 클릭은 모달 표시하지 않음
+            if (props.type === 'public_holiday') {
+                return;
+            }
             
             document.getElementById('eventModalTitle').textContent = event.title;
             

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count, Case, When
 from .models import Student
 from .forms import StudentForm, StudentSearchForm
 
@@ -32,16 +32,16 @@ def student_list(request):
     if assigned_class:
         students = students.filter(assigned_class_id=assigned_class)
     
-    # 통계
-    stats = {
-        'total': Student.objects.count(),
-        'enrolled': Student.objects.filter(status='enrolled').count(),
-        'paused': Student.objects.filter(status='paused').count(),
-        'withdrawn': Student.objects.filter(status='withdrawn').count(),
-    }
+    # 통계 - 최적화: 4개 쿼리 → 1개 집계 쿼리
+    stats = Student.objects.aggregate(
+        total=Count('id'),
+        enrolled=Count(Case(When(status='enrolled', then=1))),
+        paused=Count(Case(When(status='paused', then=1))),
+        withdrawn=Count(Case(When(status='withdrawn', then=1))),
+    )
     
     # 페이지네이션
-    paginator = Paginator(students, 15)
+    paginator = Paginator(students.order_by('-created_at'), 15)
     page = request.GET.get('page', 1)
     students = paginator.get_page(page)
     

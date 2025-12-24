@@ -263,6 +263,131 @@
             <span class="text-muted">© 2024 Academy Manager. All rights reserved.</span>
         </div>
     </footer>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav d-lg-none" id="mobileBottomNav">
+        <a href="{% url 'dashboard:index' %}" class="bottom-nav-item {% if request.resolver_match.app_name == 'dashboard' %}active{% endif %}">
+            <i class="bi bi-house-fill"></i>
+            <span>홈</span>
+        </a>
+        <a href="{% url 'attendance:list' %}" class="bottom-nav-item {% if request.resolver_match.app_name == 'attendance' %}active{% endif %}">
+            <i class="bi bi-calendar-check"></i>
+            <span>출결</span>
+        </a>
+        <button class="bottom-nav-item" type="button" data-bs-toggle="modal" data-bs-target="#mobileSearchModal">
+            <i class="bi bi-search"></i>
+            <span>검색</span>
+        </button>
+        <a href="{% url 'payments:list' %}" class="bottom-nav-item {% if request.resolver_match.app_name == 'payments' %}active{% endif %}">
+            <i class="bi bi-credit-card"></i>
+            <span>수납</span>
+        </a>
+        <button class="bottom-nav-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#moreMenuOffcanvas">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <span>더보기</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Search Modal -->
+    <div class="modal fade mobile-search-modal" id="mobileSearchModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="bi bi-search me-2"></i>검색</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control mobile-search-input" id="mobileSearchInput" 
+                               placeholder="학생, 반, 강사 검색..." autocomplete="off">
+                    </div>
+                    <div class="mobile-search-results" id="mobileSearchResults"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- More Menu Offcanvas -->
+    <div class="offcanvas offcanvas-end more-menu-offcanvas" tabindex="-1" id="moreMenuOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title"><i class="bi bi-grid-3x3-gap me-2"></i>전체 메뉴</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <!-- 학원 관리 -->
+            <div class="more-menu-section">학원 관리</div>
+            <a href="{% url 'students:list' %}" class="more-menu-item">
+                <i class="bi bi-people"></i>
+                <span>학생 관리</span>
+            </a>
+            <a href="{% url 'teachers:list' %}" class="more-menu-item">
+                <i class="bi bi-person-badge"></i>
+                <span>강사 관리</span>
+            </a>
+            <a href="{% url 'classes:list' %}" class="more-menu-item">
+                <i class="bi bi-collection"></i>
+                <span>반 목록</span>
+            </a>
+
+            <!-- 운영 -->
+            <div class="more-menu-section">운영</div>
+            <a href="{% url 'attendance:qr_generate' %}" class="more-menu-item">
+                <i class="bi bi-qr-code"></i>
+                <span>QR 코드 생성</span>
+            </a>
+            <a href="{% url 'attendance:qr_scan' %}" class="more-menu-item">
+                <i class="bi bi-qr-code-scan"></i>
+                <span>QR 스캔</span>
+            </a>
+            <a href="{% url 'schedule:calendar' %}" class="more-menu-item">
+                <i class="bi bi-calendar-event"></i>
+                <span>캘린더</span>
+            </a>
+            <a href="{% url 'timetable:index' %}" class="more-menu-item">
+                <i class="bi bi-table"></i>
+                <span>시간표</span>
+            </a>
+
+            <!-- 커뮤니케이션 -->
+            <div class="more-menu-section">커뮤니케이션</div>
+            <a href="{% url 'notifications:send' %}" class="more-menu-item">
+                <i class="bi bi-send"></i>
+                <span>알림 발송</span>
+            </a>
+            <a href="{% url 'messaging:send' %}" class="more-menu-item">
+                <i class="bi bi-chat-dots"></i>
+                <span>메시지 발송</span>
+            </a>
+
+            <!-- 분석 -->
+            <div class="more-menu-section">분석</div>
+            <a href="{% url 'academics:exam_list' %}" class="more-menu-item">
+                <i class="bi bi-pencil-square"></i>
+                <span>시험 관리</span>
+            </a>
+            <a href="{% url 'exports:hub' %}" class="more-menu-item">
+                <i class="bi bi-box-arrow-up-right"></i>
+                <span>내보내기</span>
+            </a>
+
+            <!-- 계정 -->
+            <div class="more-menu-section">계정</div>
+            <a href="{% url 'accounts:profile' %}" class="more-menu-item">
+                <i class="bi bi-person"></i>
+                <span>프로필</span>
+            </a>
+            {% if user.is_staff %}
+            <a href="/admin/" class="more-menu-item">
+                <i class="bi bi-gear"></i>
+                <span>관리자 페이지</span>
+            </a>
+            {% endif %}
+            <a href="{% url 'accounts:logout' %}" class="more-menu-item">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>로그아웃</span>
+            </a>
+        </div>
+    </div>
     {% endif %}
 
     <!-- Toast Container -->
@@ -578,6 +703,113 @@
                 }
 
                 content.innerHTML = html;
+            }
+        })();
+
+        // ===== Mobile Search =====
+        (function () {
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+            const mobileSearchResults = document.getElementById('mobileSearchResults');
+            const mobileSearchModal = document.getElementById('mobileSearchModal');
+            if (!mobileSearchInput || !mobileSearchResults) return;
+
+            let debounceTimer;
+            let currentRequest;
+
+            // Focus input when modal opens
+            if (mobileSearchModal) {
+                mobileSearchModal.addEventListener('shown.bs.modal', function () {
+                    mobileSearchInput.focus();
+                });
+                mobileSearchModal.addEventListener('hidden.bs.modal', function () {
+                    mobileSearchInput.value = '';
+                    mobileSearchResults.innerHTML = '';
+                });
+            }
+
+            mobileSearchInput.addEventListener('input', function () {
+                const query = this.value.trim();
+
+                clearTimeout(debounceTimer);
+                if (currentRequest) currentRequest.abort();
+
+                if (query.length < 2) {
+                    mobileSearchResults.innerHTML = '<p class="text-muted text-center py-4">2글자 이상 입력하세요</p>';
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => performMobileSearch(query), 300);
+            });
+
+            function performMobileSearch(query) {
+                mobileSearchResults.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div> 검색 중...</div>';
+
+                currentRequest = new XMLHttpRequest();
+                currentRequest.open('GET', '/core/api/search/?q=' + encodeURIComponent(query));
+                currentRequest.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        const data = JSON.parse(this.responseText);
+                        renderMobileResults(data);
+                    }
+                };
+                currentRequest.send();
+            }
+
+            function renderMobileResults(data) {
+                if (data.total === 0) {
+                    mobileSearchResults.innerHTML = '<div class="text-center py-4 text-muted"><i class="bi bi-inbox fs-3 d-block mb-2"></i>검색 결과가 없습니다</div>';
+                    return;
+                }
+
+                let html = '';
+
+                if (data.students.length > 0) {
+                    html += '<div class="search-category"><div class="search-category-header"><i class="bi bi-people me-2"></i>학생</div>';
+                    data.students.forEach(s => {
+                        html += `<a href="${s.url}" class="search-result-item" onclick="bootstrap.Modal.getInstance(document.getElementById('mobileSearchModal')).hide()">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><span class="fw-semibold">${s.name}</span><span class="badge ${s.status_class} ms-2">${s.status}</span></div>
+                                <small class="text-muted">${s.class_name}</small>
+                            </div>
+                            <small class="text-muted">${s.phone}</small>
+                        </a>`;
+                    });
+                    html += '</div>';
+                }
+
+                if (data.classes.length > 0) {
+                    html += '<div class="search-category"><div class="search-category-header"><i class="bi bi-collection me-2"></i>반</div>';
+                    data.classes.forEach(c => {
+                        html += `<a href="${c.url}" class="search-result-item" onclick="bootstrap.Modal.getInstance(document.getElementById('mobileSearchModal')).hide()">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">${c.name}</span>
+                                <small class="text-muted">${c.student_count}명</small>
+                            </div>
+                            <small class="text-muted">${c.teacher} · ${c.subject}</small>
+                        </a>`;
+                    });
+                    html += '</div>';
+                }
+
+                if (data.teachers.length > 0) {
+                    html += '<div class="search-category"><div class="search-category-header"><i class="bi bi-person-badge me-2"></i>강사</div>';
+                    data.teachers.forEach(t => {
+                        html += `<a href="${t.url}" class="search-result-item" onclick="bootstrap.Modal.getInstance(document.getElementById('mobileSearchModal')).hide()">
+                            <div class="fw-semibold">${t.name}</div>
+                            <small class="text-muted">${t.subject} · ${t.phone}</small>
+                        </a>`;
+                    });
+                    html += '</div>';
+                }
+
+                mobileSearchResults.innerHTML = html;
+            }
+        })();
+
+        // ===== Add body class for bottom nav padding =====
+        (function () {
+            if (document.getElementById('mobileBottomNav')) {
+                document.body.classList.add('has-bottom-nav');
             }
         })();
     </script>
